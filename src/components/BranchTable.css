@@ -1,0 +1,135 @@
+.card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: slideUp 0.5s ease-out;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.card::-webkit-scrollbar {
+  height: 8px;
+}
+
+.card::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.card::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+.card::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.card::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.card::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+.card::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+
+thead {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+  padding: 6px 4px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+th {
+  font-weight: 700;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-size: 9px;
+}
+
+th.group {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  font-size: 8px;
+  padding: 4px;
+  border-bottom: 2px solid #667eea;
+}
+
+td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-weight: 500;
+  color: #334155;
+  font-size: 10px;
+}
+
+td:first-child {
+  text-align: left;
+  font-weight: 700;
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.08) 0%, rgba(255, 255, 255, 0.95) 100%);
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  color: #1e293b;
+  border-right: 2px solid rgba(102, 126, 234, 0.2);
+  font-size: 9px;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  transform: scale(1.01);
+}
+
+tbody tr:hover td {
+  background: transparent;
+}
+
+tbody tr:hover td:first-child {
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.15) 0%, rgba(255, 255, 255, 0.95) 100%);
+  color: #667eea;
+}

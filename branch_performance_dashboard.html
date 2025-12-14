@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Walton Plaza – Dynamic One Page Dashboard</title>
+  <style>
+    body { margin: 0; font-family: "Segoe UI", Tahoma, sans-serif; background: linear-gradient(135deg,#eef2f7,#f8fafc); }
+    .container { padding: 16px; }
+    header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    header h1 { font-size:20px; margin:0; }
+    .subtitle { font-size:12px; color:#555; }
+
+    .kpi-row { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:12px; }
+    .kpi { background:#fff; border-radius:14px; padding:10px; box-shadow:0 4px 12px rgba(0,0,0,.08); }
+    .kpi h3 { font-size:12px; margin:0 0 6px; color:#475569; }
+    .kpi .value { font-size:18px; font-weight:700; }
+    .kpi .small { font-size:11px; color:#64748b; }
+
+    .card { background:#fff; border-radius:16px; padding:10px; box-shadow:0 6px 18px rgba(0,0,0,.1); }
+    table { width:100%; border-collapse:collapse; font-size:11px; }
+    thead { background:#020617; color:#fff; position:sticky; top:0; z-index:2; }
+    th, td { padding:6px; white-space:nowrap; text-align:center; }
+    th { font-weight:600; border-right:1px solid #334155; }
+    th.group { background:#020617; font-size:10px; }
+    td { border-bottom:1px solid #e5e7eb; }
+    td:first-child { text-align:left; font-weight:600; background:#f8fafc; position:sticky; left:0; z-index:1; }
+    tr:hover td { background:#f1f5f9; }
+
+    .good { color:#15803d; font-weight:700; }
+    .warn { color:#ca8a04; font-weight:700; }
+    .bad  { color:#dc2626; font-weight:700; }
+
+    footer { text-align:center; font-size:11px; color:#666; margin-top:8px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div>
+    <h1>Walton Plaza – All Branch Dashboard</h1>
+    <div class="subtitle">10 Key KPIs | Target vs Achievement vs %</div>
+  </div>
+  <div class="subtitle">One Page View</div>
+</header>
+
+<div class="kpi-row">
+  <div class="kpi"><h3>Total Target</h3><div class="value">৳ 6.5 Cr</div><div class="small">All Branches</div></div>
+  <div class="kpi"><h3>Total Ach</h3><div class="value">৳ 1.9 Cr</div><div class="small warn">29%</div></div>
+  <div class="kpi"><h3>Retail %</h3><div class="value good">41%</div></div>
+  <div class="kpi"><h3>Hire %</h3><div class="value bad">26%</div></div>
+  <div class="kpi"><h3>Profit %</h3><div class="value bad">0%</div></div>
+</div>
+
+<div class="card" style="overflow:auto; max-height:65vh;">
+<table>
+<thead>
+<tr>
+  <th rowspan="2">Branch</th>
+  <th class="group" colspan="3">Total</th>
+  <th class="group" colspan="3">Retail</th>
+  <th class="group" colspan="3">Hire</th>
+  <th class="group" colspan="3">Hire DP</th>
+  <th class="group" colspan="3">INS / LPR</th>
+  <th class="group" colspan="3">Exec</th>
+  <th class="group" colspan="3">Self</th>
+  <th class="group" colspan="3">Dealer Sales</th>
+  <th class="group" colspan="3">Dealer Coll</th>
+  <th class="group" colspan="3">Profit</th>
+</tr>
+<tr>
+  <th>T</th><th>A</th><th>%</th>
+  <th>T</th><th>A</th><th>%</th>
+  <th>T</th><th>A</th><th>%</th>
+  <th>T</th><th>A</th><th>%</th>
+  <th>T</th><th>A</th><th>%</th>
+  <th>T</th><th>A</th><th>%</th>
+  <th>T</th><th>A</th><th>%</th>
+  <th>T</th><th>A</th><th>%</th>
+  <th>T</th><th>A</th><th>%</th>
+  <th>T</th><th>A</th><th>%</th>
+</tr>
+</thead>
+<tbody id="branchTable"></tbody>
+</table>
+</div>
+
+<footer>🟢 ≥100% | 🟡 80–99% | 🔴 &lt;80%</footer>
+</div>
+
+<script>
+// ===== CONFIG =====
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfBMgoqCsNi4oAnvtFsSMEdxLLy1mdwFXLehQ2ZfjdHwHQq2mHGb0283g76EneTkFvKuvN8SPC9dll/pub?output=csv';
+
+// ===== HELPERS =====
+function pct(t,a){ return t ? Math.round((a/t)*100) : 0; }
+function cls(p){ return p>=100 ? 'good' : p>=80 ? 'warn' : 'bad'; }
+function fmt(n){ return Number(n||0).toLocaleString('en-IN'); }
+function cell(t,a){ const p=pct(t,a); return `<td>${fmt(t)}</td><td>${fmt(a)}</td><td class="${cls(p)}">${p}%</td>`; }
+
+// ===== CSV PARSER (FIXED) =====
+function parseCSV(text){
+  const rows = text.trim().split(/\n/); // FIXED REGEX
+  const headers = rows[0].split(',');
+  return rows.slice(1).map(r => {
+    const cols = r.split(',');
+    const obj = {};
+    headers.forEach((h,i) => obj[h.trim()] = (cols[i] || '').replace(/,/g,''));
+    return obj;
+  });
+}
+
+// ===== RENDER TABLE =====
+function render(rows){
+  const tb = document.getElementById('branchTable');
+  tb.innerHTML = '';
+
+  rows.forEach(r => {
+    tb.innerHTML += `<tr>
+      <td>${r['Walton Plaza'] || r['Branch'] || ''}</td>
+      ${cell(r['Total Target'], r['Total Ach'])}
+      ${cell(r['Retail Target'], r['Retial Ach'])}
+      ${cell(r['Hire Target'], r['Hire Ach'])}
+      ${cell(r['Hire DP Target'], r['Hire DP Ach'])}
+      ${cell(r['INS or LPR Target'], r['INS or LPR Ach'])}
+      ${cell(r['Hire Collection Executive (Qty.) Target'], r['Hire Collection Executive (Qty.) Ach'])}
+      ${cell(r['Hire Collection Self (Qty.) Target'], r['Hire Collection Self (Qty.) Ach'])}
+      ${cell(r['Dealer & Corporate Sales Target'], r['Dealer & Corporate Sales Ach'])}
+      ${cell(r['Dealer & Corporate Collection Target'], r['Dealer & Corporate Collection Ach'])}
+      ${cell(r['Profit Target'], r['Profit  Ach'])}
+    </tr>`;
+  });
+}
+
+// ===== LOAD DATA =====
+fetch(CSV_URL)
+  .then(r => r.text())
+  .then(t => render(parseCSV(t)))
+  .catch(err => {
+    document.getElementById('branchTable').innerHTML = '<tr><td colspan="31">Failed to load data</td></tr>';
+    console.error(err);
+  });
+</script>
+</body>
+</html>
