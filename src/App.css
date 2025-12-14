@@ -22,11 +22,12 @@ header {
   align-items: center;
   margin-bottom: 12px;
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px var(--shadow);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
 }
 
 header h1 {
@@ -42,8 +43,48 @@ header h1 {
 
 .subtitle {
   font-size: 11px;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 500;
+}
+
+.update-date-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.update-icon {
+  font-size: 18px;
+}
+
+.update-text {
+  letter-spacing: 0.3px;
+}
+
+[data-theme='dark'] .update-date-banner {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
 }
 
 .kpi-row {
@@ -58,10 +99,11 @@ header h1 {
   text-align: center;
   padding: 40px;
   font-size: 16px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px var(--shadow);
+  transition: all 0.3s ease;
 }
 
 .loading {
@@ -77,13 +119,15 @@ header h1 {
 footer {
   text-align: center;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
   margin-top: 20px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--card-bg);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   font-weight: 500;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
 }
 
 .good {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './BranchView.css'
-import { parseCSV, calculatePercentage, getPercentageClass, formatNumber } from '../utils/dataUtils'
+import { parseCSV, calculatePercentage, getPercentageClass, formatNumber, extractUpdateDate } from '../utils/dataUtils'
 import ScreenshotButton from '../components/ScreenshotButton'
 
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfBMgoqCsNi4oAnvtFsSMEdxLLy1mdwFXLehQ2ZfjdHwHQq2mHGb0283g76EneTkFvKuvN8SPC9dll/pub?output=csv'
@@ -8,6 +8,8 @@ const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfBMgoqCsNi4oA
 function BranchView() {
   const [data, setData] = useState([])
   const [selectedBranch, setSelectedBranch] = useState(null)
+  const [showAllBranches, setShowAllBranches] = useState(false)
+  const [updateDate, setUpdateDate] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const detailsRef = useRef(null)
@@ -23,7 +25,9 @@ function BranchView() {
       const response = await fetch(CSV_URL)
       const text = await response.text()
       const parsed = parseCSV(text)
+      const date = extractUpdateDate(text)
       setData(parsed)
+      setUpdateDate(date)
       if (parsed.length > 0) {
         setSelectedBranch(parsed[0])
       }
@@ -32,6 +36,16 @@ function BranchView() {
       console.error(err)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleBranchSelect = (branch) => {
+    if (branch === 'all') {
+      setShowAllBranches(true)
+      setSelectedBranch(null)
+    } else {
+      setShowAllBranches(false)
+      setSelectedBranch(branch)
     }
   }
 
@@ -52,24 +66,90 @@ function BranchView() {
   if (error) return <div className="error">{error}</div>
 
   return (
-    <div className="branch-view">
-      <div className="branch-selector-card">
-        <h2>Select Branch</h2>
-        <div className="branch-list">
-          {data.map((branch, idx) => (
+    <>
+      {updateDate && (
+        <div className="update-date-banner">
+          <span className="update-icon">📅</span>
+          <span className="update-text">Last Updated: {updateDate}</span>
+        </div>
+      )}
+      
+      <div className="branch-view">
+        <div className="branch-selector-card">
+          <h2>Select Branch</h2>
+          <div className="branch-list">
             <button
-              key={idx}
-              className={`branch-item ${selectedBranch === branch ? 'active' : ''}`}
-              onClick={() => setSelectedBranch(branch)}
+              className={`branch-item all-branches ${showAllBranches ? 'active' : ''}`}
+              onClick={() => handleBranchSelect('all')}
             >
-              <span className="branch-name">{branch['Branch Name']}</span>
+              <span className="branch-name">📊 All Branches Combined</span>
               <span className="branch-arrow">→</span>
             </button>
-          ))}
+            {data.map((branch, idx) => (
+              <button
+                key={idx}
+                className={`branch-item ${selectedBranch === branch ? 'active' : ''}`}
+                onClick={() => handleBranchSelect(branch)}
+              >
+                <span className="branch-name">{branch['Branch Name']}</span>
+                <span className="branch-arrow">→</span>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {selectedBranch && (
+      {showAllBranches ? (
+        <>
+          <div className="branch-details" ref={detailsRef}>
+            <div className="branch-header">
+              <h2>📊 All Branches Combined</h2>
+              <div className="branch-subtitle">Total Performance Metrics</div>
+            </div>
+
+            <div className="metrics-grid">
+              {metrics.map((metric, idx) => {
+                let totalTarget = 0
+                let totalAch = 0
+                
+                data.forEach(branch => {
+                  totalTarget += Number(String(branch[metric.target] || 0).replace(/,/g, ''))
+                  totalAch += Number(String(branch[metric.ach] || 0).replace(/,/g, ''))
+                })
+                
+                const pct = calculatePercentage(totalTarget, totalAch)
+                const pctClass = getPercentageClass(pct)
+
+                return (
+                  <div key={idx} className="metric-card">
+                    <div className="metric-label">{metric.label}</div>
+                    <div className="metric-values">
+                      <div className="metric-row">
+                        <span className="metric-title">Target:</span>
+                        <span className="metric-value">{formatNumber(totalTarget)}</span>
+                      </div>
+                      <div className="metric-row">
+                        <span className="metric-title">Achievement:</span>
+                        <span className="metric-value">{formatNumber(totalAch)}</span>
+                      </div>
+                      <div className="metric-row">
+                        <span className="metric-title">Progress:</span>
+                        <span className={`metric-percentage ${pctClass}`}>{pct}%</span>
+                      </div>
+                    </div>
+                    <div className="progress-bar">
+                      <div className={`progress-fill ${pctClass}`} style={{ width: `${Math.min(pct, 100)}%` }}></div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+          <ScreenshotButton 
+            targetRef={detailsRef} 
+            fileName="all-branches-combined-report"
+          />
+        </>
+      ) : selectedBranch && (
         <>
           <div className="branch-details" ref={detailsRef}>
             <div className="branch-header">
@@ -115,7 +195,8 @@ function BranchView() {
           />
         </>
       )}
-    </div>
+      </div>
+    </>
   )
 }
 

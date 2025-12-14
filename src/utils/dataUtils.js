@@ -12,6 +12,21 @@ export function parseCSV(text) {
   }).filter(row => row['Branch Name']) // Filter out empty rows
 }
 
+export function extractUpdateDate(text) {
+  const lines = text.trim().split(/\r?\n/)
+  if (lines.length === 0) return null
+  
+  const headers = parseCSVLine(lines[0])
+  // AN is the 40th column (A=1, B=2, ... Z=26, AA=27, ... AN=40)
+  const updateDateIndex = 39 // 0-indexed, so AN = 39
+  
+  if (headers.length > updateDateIndex) {
+    return headers[updateDateIndex] || null
+  }
+  
+  return null
+}
+
 function parseCSVLine(line) {
   const result = []
   let current = ''

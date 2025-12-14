@@ -6,15 +6,16 @@
 }
 
 .branch-selector-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--card-bg);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px var(--shadow);
+  border: 1px solid var(--border-color);
   height: fit-content;
   max-height: 80vh;
   overflow-y: auto;
+  transition: all 0.3s ease;
 }
 
 .branch-selector-card h2 {
@@ -45,12 +46,20 @@
   transition: all 0.3s ease;
   font-size: 13px;
   font-weight: 600;
-  color: #334155;
+  color: var(--text-primary);
 }
 
 .branch-item:hover {
   background: rgba(102, 126, 234, 0.1);
   transform: translateX(4px);
+}
+
+[data-theme='dark'] .branch-item {
+  background: rgba(102, 126, 234, 0.08);
+}
+
+[data-theme='dark'] .branch-item:hover {
+  background: rgba(102, 126, 234, 0.15);
 }
 
 .branch-item.active {
@@ -77,12 +86,13 @@
 }
 
 .branch-details {
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 20px;
   padding: 28px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px var(--shadow);
+  border: 1px solid var(--border-color);
   animation: slideUp 0.5s ease-out;
+  transition: all 0.3s ease;
 }
 
 .branch-header {
@@ -103,7 +113,7 @@
 
 .branch-subtitle {
   font-size: 14px;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -121,6 +131,31 @@
   transition: all 0.3s ease;
 }
 
+[data-theme='dark'] .metric-card {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.branch-item.all-branches {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  font-weight: 700;
+}
+
+.branch-item.all-branches:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+}
+
+.branch-item.all-branches.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: transparent;
+}
+
+[data-theme='dark'] .branch-item.all-branches {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  border: 2px solid rgba(102, 126, 234, 0.4);
+}
+
 .metric-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
@@ -134,6 +169,10 @@
   margin-bottom: 16px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+[data-theme='dark'] .metric-label {
+  color: #818cf8;
 }
 
 .metric-values {
@@ -151,14 +190,14 @@
 
 .metric-title {
   font-size: 14px;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 600;
 }
 
 .metric-value {
   font-size: 18px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .metric-percentage {
@@ -172,6 +211,10 @@
   border-radius: 10px;
   overflow: hidden;
   position: relative;
+}
+
+[data-theme='dark'] .progress-bar {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .progress-fill {

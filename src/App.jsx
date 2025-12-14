@@ -3,12 +3,15 @@ import './App.css'
 import Navigation from './components/Navigation'
 import Dashboard from './pages/Dashboard'
 import BranchView from './pages/BranchView'
+import ThemeToggle from './components/ThemeToggle'
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('dashboard')
+  const [currentPage, setCurrentPage] = useState('branch')
 
   return (
     <div className="container">
+      <ThemeToggle />
+      
       <header>
         <div>
           <h1>Walton Plaza – Branch Dashboard</h1>
@@ -19,7 +22,7 @@ function App() {
 
       <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
 
-      {currentPage === 'dashboard' ? <Dashboard /> : <BranchView />}
+      {currentPage === 'branch' ? <BranchView /> : <Dashboard />}
 
       <footer>🟢 ≥100% | 🟡 80–99% | 🔴 &lt;80%</footer>
     </div>

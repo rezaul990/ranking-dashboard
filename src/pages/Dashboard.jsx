@@ -2,13 +2,14 @@ import { useState, useEffect, useRef } from 'react'
 import KPICard from '../components/KPICard'
 import BranchTable from '../components/BranchTable'
 import ScreenshotButton from '../components/ScreenshotButton'
-import { parseCSV, calculateKPIs } from '../utils/dataUtils'
+import { parseCSV, calculateKPIs, extractUpdateDate } from '../utils/dataUtils'
 
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfBMgoqCsNi4oAnvtFsSMEdxLLy1mdwFXLehQ2ZfjdHwHQq2mHGb0283g76EneTkFvKuvN8SPC9dll/pub?output=csv'
 
 function Dashboard() {
   const [data, setData] = useState([])
   const [kpis, setKpis] = useState(null)
+  const [updateDate, setUpdateDate] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const dashboardRef = useRef(null)
@@ -24,8 +25,10 @@ function Dashboard() {
       const response = await fetch(CSV_URL)
       const text = await response.text()
       const parsed = parseCSV(text)
+      const date = extractUpdateDate(text)
       setData(parsed)
       setKpis(calculateKPIs(parsed))
+      setUpdateDate(date)
     } catch (err) {
       setError('Failed to load data')
       console.error(err)
@@ -37,6 +40,13 @@ function Dashboard() {
   return (
     <>
       <div ref={dashboardRef}>
+        {updateDate && (
+          <div className="update-date-banner">
+            <span className="update-icon">📅</span>
+            <span className="update-text">Last Updated: {updateDate}</span>
+          </div>
+        )}
+
         {loading && <div className="loading">Loading data...</div>}
         {error && <div className="error">{error}</div>}
 
