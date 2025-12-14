@@ -83,10 +83,31 @@ git push
 
 ## Troubleshooting
 
+### Error 126 - Build Command Failed
+
+If you see "Command npm run build exited with 126":
+
+1. **Check Node Version in Vercel**
+   - Go to Project Settings → General
+   - Set Node.js Version to `18.x` or `20.x`
+   - Redeploy
+
+2. **Clear Build Cache**
+   - Go to Deployments
+   - Click "..." menu → Redeploy
+   - Check "Clear build cache"
+
+3. **Verify Locally**
+   ```bash
+   npm install
+   npm run build
+   ```
+
 ### Build Fails
 - Check `npm run build` works locally
 - Ensure all dependencies are in package.json
-- Check Node.js version (16+ required)
+- Check Node.js version (18+ required)
+- Delete `node_modules` and `package-lock.json`, then `npm install`
 
 ### Data Not Loading
 - Verify Google Sheets is published as CSV
@@ -97,6 +118,7 @@ git push
 - Check browser console for errors
 - Verify build completed successfully
 - Clear browser cache
+- Check if all routes redirect to index.html
 
 ## Performance
 
