@@ -1,0 +1,48 @@
+.collection-table {
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+.collection-table th {
+  font-size: 0.75rem;
+  padding: 8px 6px;
+  white-space: nowrap;
+}
+
+.collection-table td {
+  padding: 8px 6px;
+}
+
+.collection-table .branch-name {
+  text-align: left;
+  font-weight: 500;
+  min-width: 180px;
+  max-width: 250px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.collection-table .number {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 1400px) {
+  .collection-table {
+    font-size: 0.75rem;
+  }
+  
+  .collection-table th {
+    font-size: 0.7rem;
+    padding: 6px 4px;
+  }
+  
+  .collection-table td {
+    padding: 6px 4px;
+  }
+}

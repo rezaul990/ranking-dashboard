@@ -3,10 +3,27 @@ import './App.css'
 import Navigation from './components/Navigation'
 import Dashboard from './pages/Dashboard'
 import BranchView from './pages/BranchView'
+import CollectionDashboard from './pages/CollectionDashboard'
+import CollectionBranchView from './pages/CollectionBranchView'
 import ThemeToggle from './components/ThemeToggle'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('branch')
+
+  const renderPage = () => {
+    switch(currentPage) {
+      case 'branch':
+        return <BranchView />
+      case 'dashboard':
+        return <Dashboard />
+      case 'collection':
+        return <CollectionDashboard />
+      case 'collectionBranch':
+        return <CollectionBranchView />
+      default:
+        return <BranchView />
+    }
+  }
 
   return (
     <div className="container">
@@ -22,7 +39,7 @@ function App() {
 
       <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
 
-      {currentPage === 'branch' ? <BranchView /> : <Dashboard />}
+      {renderPage()}
 
       <footer>🟢 ≥100% | 🟡 80–99% | 🔴 &lt;80%</footer>
     </div>

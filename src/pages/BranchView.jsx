@@ -57,8 +57,8 @@ function BranchView() {
     { label: 'INS / LPR', target: 'INS or LPR Target', ach: 'INS or LPR Ach' },
     { label: 'Exec Collection', target: 'Hire Collection Executive (Qty.) Target', ach: 'Hire Collection Executive (Qty.) Ach' },
     { label: 'Self Collection', target: 'Hire Collection Self (Qty.) Target', ach: 'Hire Collection Self (Qty.) Ach' },
-    { label: 'Dealer Sales', target: 'Dealer & Corporate Sales Target', ach: 'Dealer & Corporate Sales Ach' },
-    { label: 'Dealer Collection', target: 'Dealer & Corporate Collection Target', ach: 'Dealer & Corporate Collection Ach' },
+    { label: 'Dealer & Corporate Sales', target: 'Dealer & Corporate Sales Target', ach: 'Dealer & Corporate Sales Ach' },
+    { label: 'Dealer & Corporate Collection', target: 'Dealer & Corporate Collection Target', ach: 'Dealer & Corporate Collection Ach' },
     { label: 'Profit', target: 'Profit Target', ach: 'Profit Ach' }
   ]
 

@@ -17,6 +17,20 @@ function Navigation({ currentPage, onPageChange }) {
         <span className="nav-icon">📊</span>
         <span>Table View</span>
       </button>
+      <button
+        className={`nav-button ${currentPage === 'collectionBranch' ? 'active' : ''}`}
+        onClick={() => onPageChange('collectionBranch')}
+      >
+        <span className="nav-icon">💰</span>
+        <span>Collection Branch</span>
+      </button>
+      <button
+        className={`nav-button ${currentPage === 'collection' ? 'active' : ''}`}
+        onClick={() => onPageChange('collection')}
+      >
+        <span className="nav-icon">📋</span>
+        <span>Collection Table</span>
+      </button>
     </nav>
   )
 }
