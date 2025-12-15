@@ -71,7 +71,11 @@ function CollectionBranchView() {
   const cardGroups = [
     {
       title: 'Hire Outstanding',
-      fields: [{ label: 'Amount', field: 'Hire Outstanding', type: 'amount' }]
+      fields: [
+        { label: 'Hire Outstanding', field: 'Hire Outstanding', type: 'amount' },
+        { label: 'New Outstanding Added', field: 'New Outstanding Added', type: 'amount' },
+        { label: 'Total Update Outstanding', field: 'Total Update Outstanding', type: 'amount' }
+      ]
     },
     {
       title: 'Running AC (Collectible)',
