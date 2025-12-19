@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard'
 import BranchView from './pages/BranchView'
 import CollectionDashboard from './pages/CollectionDashboard'
 import CollectionBranchView from './pages/CollectionBranchView'
+import DealerOverview from './pages/DealerOverview'
 import ThemeToggle from './components/ThemeToggle'
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
         return <CollectionDashboard />
       case 'collectionBranch':
         return <CollectionBranchView />
+      case 'dealerOverview':
+        return <DealerOverview />
       default:
         return <BranchView />
     }
