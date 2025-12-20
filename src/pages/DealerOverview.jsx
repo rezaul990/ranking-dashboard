@@ -5,7 +5,7 @@ import { parseCSV, formatNumber } from '../utils/dataUtils'
 import ScreenshotButton from '../components/ScreenshotButton'
 
 // TODO: Replace with your actual spreadsheet link
-const CSV_URL = ''
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQzdPUUVNNNlUy4U0SElgzASaiAFYoW05indKbBvRG-A9-Rs0WNZkZhMueUMhsFL9j98DUJV4UUqWRM/pub?output=csv'
 
 function DealerOverview() {
   const [data, setData] = useState([])
@@ -59,10 +59,41 @@ function DealerOverview() {
   // TODO: Update card groups based on your spreadsheet columns
   const cardGroups = [
     {
-      title: 'Dealer Info',
+      title: 'Dealer Qty',
       fields: [
-        { label: 'Total Dealers', field: 'Total Dealers', type: 'qty' },
-        { label: 'Active Dealers', field: 'Active Dealers', type: 'qty' }
+        { label: 'Dealer Qty', field: 'Dealer Qty', type: 'qty' },
+        { label: 'Positive Balance Qty', field: 'Positive Balance Qty', type: 'qty' },
+        { label: 'Negative Balance Qty', field: 'Negative Balance Qty', type: 'qty' }
+      ]
+    },
+    {
+      title: 'Dealer Due',
+      fields: [
+        { label: 'Amount', field: 'Dealer Due', type: 'amount' }
+      ]
+    },
+    {
+      title: 'Dealer Avg %',
+      fields: [
+        { label: 'Percentage', field: 'Dealer Avg %', type: 'percentage' }
+      ]
+    },
+    {
+      title: '0%-% Dealer Qty',
+      fields: [
+        { label: 'Quantity', field: '0%-% Dealer Qty', type: 'qty' }
+      ]
+    },
+    {
+      title: '3 Month No Coll',
+      fields: [
+        { label: 'Quantity', field: '3 Month No Coll', type: 'qty' }
+      ]
+    },
+    {
+      title: '1 Year No Coll',
+      fields: [
+        { label: 'Quantity', field: '1 Year No Coll', type: 'qty' }
       ]
     }
   ]
@@ -83,8 +114,14 @@ function DealerOverview() {
   }
 
   const handleCardAction = (cardTitle) => {
-    // TODO: Add card links here
-    const cardLinks = {}
+    // Card links mapping
+    const cardLinks = {
+      'Dealer Due': 'https://docs.google.com/spreadsheets/d/13E6Lx5oAYT8AU-8pdrA5VSF8w9hv6ToXJdyHXYka3IE/edit?gid=0#gid=0',
+      'Dealer Avg %': 'https://docs.google.com/spreadsheets/d/13E6Lx5oAYT8AU-8pdrA5VSF8w9hv6ToXJdyHXYka3IE/edit?gid=0#gid=0',
+      '0%-% Dealer Qty': 'https://docs.google.com/spreadsheets/d/1_2-oc57Q3O5TdPI6c5pTXADhY-5R6qtBWW0uTgLeOCM/edit?gid=0#gid=0',
+      '3 Month No Coll': 'https://docs.google.com/spreadsheets/d/1_2-oc57Q3O5TdPI6c5pTXADhY-5R6qtBWW0uTgLeOCM/edit?gid=0#gid=0',
+      '1 Year No Coll': 'https://docs.google.com/spreadsheets/d/1_2-oc57Q3O5TdPI6c5pTXADhY-5R6qtBWW0uTgLeOCM/edit?gid=0#gid=0'
+    }
     
     const link = cardLinks[cardTitle]
     if (link) {
