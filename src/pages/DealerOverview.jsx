@@ -69,7 +69,9 @@ function DealerOverview() {
     {
       title: 'Dealer Due',
       fields: [
-        { label: 'Amount', field: 'Dealer Due', type: 'amount' }
+        { label: 'Dealer Due', field: 'Dealer Due', type: 'amount' },
+        { label: 'POS Due', field: 'POS Due', type: 'amount' },
+        { label: 'EBS Due', field: 'EBS Due', type: 'amount' }
       ]
     },
     {
@@ -94,6 +96,23 @@ function DealerOverview() {
       title: '1 Year No Coll',
       fields: [
         { label: 'Quantity', field: '1 Year No Coll', type: 'qty' }
+      ]
+    },
+    {
+      title: 'Sales VS Coll Running',
+      fields: [
+        { label: 'Total Sale', field: 'Total Sale', type: 'amount' },
+        { label: 'POS Sale', field: 'POS Sale', type: 'amount' },
+        { label: 'EBS Sale', field: 'EBS Sale', type: 'amount' },
+        { label: 'POS Coll', field: 'POS Coll', type: 'amount' },
+        { label: 'EBS Coll', field: 'EBS Coll', type: 'amount' },
+        { label: 'Sales VS Coll', field: 'Sales VS Coll', type: 'percentage' }
+      ]
+    },
+    {
+      title: 'Policy Wise Collection Short',
+      fields: [
+        { label: 'Policy Wise Collection Short', field: 'Policy Wise Collection Short', type: 'amount' }
       ]
     }
   ]
