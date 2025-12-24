@@ -73,12 +73,13 @@ function CorporateOverview() {
   }
 
   // Columns to exclude from individual cards (they'll be grouped)
-  const groupedColumns = ['POS Due', 'EBS Due', 'POS Sale', 'EBS Sale', 'POS Coll', 'EBS Coll', 'Positive Balance', 'Negative Balance']
+  const groupedColumns = ['POS Due', 'EBS Due', 'POS Sale', 'EBS Sale', 'POS Coll', 'EBS Coll', 'Positive Balance', 'Negative Balance', 'No Coll Running Month']
 
   // Card links mapping - add links here for cards that should be clickable
   const cardLinks = {
     '3 Month No Coll': 'https://docs.google.com/spreadsheets/d/186xgrL76QLV16n-XOHW2SRFoRz0MX_QB3B6eIlYAiE0/edit?gid=0#gid=0',
     '1 Year No Coll': 'https://docs.google.com/spreadsheets/d/186xgrL76QLV16n-XOHW2SRFoRz0MX_QB3B6eIlYAiE0/edit?gid=0#gid=0',
+    'No Coll Qty (Running)': 'https://docs.google.com/spreadsheets/d/186xgrL76QLV16n-XOHW2SRFoRz0MX_QB3B6eIlYAiE0/edit?gid=0#gid=0',
   }
 
   const handleCardAction = (cardTitle) => {
@@ -264,6 +265,31 @@ function CorporateOverview() {
     </div>
   )
 
+  const renderNoCollRunningCard = (branchData) => (
+    <div 
+      key="no-coll-running" 
+      className="collection-metric-card"
+      onClick={() => handleCardAction('No Coll Qty (Running)')}
+      role="button"
+      tabIndex={0}
+      onKeyPress={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          handleCardAction('No Coll Qty (Running)')
+        }
+      }}
+    >
+      <div className="card-header-row">
+        <div className="card-title">No Coll Qty (Running)</div>
+        <CardActionButton />
+      </div>
+      <div className="card-content">
+        <div className="card-row">
+          <span className="card-value">{formatValue(branchData['No Coll Running Month'])}</span>
+        </div>
+      </div>
+    </div>
+  )
+
   const renderCards = (branchData) => {
     const cards = []
     const filteredColumns = columns.filter(col => !groupedColumns.includes(col) && col !== 'Corpoate Due' && col !== 'Total Sale' && col !== 'Total Coll' && col !== 'Party Qty')
@@ -286,6 +312,11 @@ function CorporateOverview() {
     // Add Total Coll grouped card
     if (columns.includes('Total Coll')) {
       cards.push(renderTotalCollCard(branchData))
+    }
+    
+    // Add No Coll Qty (Running) card
+    if (columns.includes('No Coll Running Month')) {
+      cards.push(renderNoCollRunningCard(branchData))
     }
     
     // Add remaining individual cards
