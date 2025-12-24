@@ -1,0 +1,6 @@
+/* Corporate Overview specific styles - inherits from BranchView.css and CollectionBranchView.css */
+
+.value-red {
+  color: #dc3545 !important;
+  font-weight: 600;
+}

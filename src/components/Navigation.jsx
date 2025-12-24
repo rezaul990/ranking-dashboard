@@ -38,6 +38,13 @@ function Navigation({ currentPage, onPageChange }) {
         <span className="nav-icon">🏪</span>
         <span>Dealer Overview</span>
       </button>
+      <button
+        className={`nav-button ${currentPage === 'corporateOverview' ? 'active' : ''}`}
+        onClick={() => onPageChange('corporateOverview')}
+      >
+        <span className="nav-icon">🏛️</span>
+        <span>Corporate Overview</span>
+      </button>
     </nav>
   )
 }
