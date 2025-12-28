@@ -99,6 +99,12 @@ function DealerOverview() {
       ]
     },
     {
+      title: 'No Coll Qty (Running)',
+      fields: [
+        { label: 'Quantity', field: 'No Coll Qty', type: 'qty' }
+      ]
+    },
+    {
       title: 'Sales VS Coll Running',
       fields: [
         { label: 'Total Sale', field: 'Total Sale', type: 'amount' },

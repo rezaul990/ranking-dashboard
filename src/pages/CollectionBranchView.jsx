@@ -99,7 +99,8 @@ function CollectionBranchView() {
       fields: [
         { label: 'Collectible Qty', field: 'Collectible Qty', type: 'qty' },
         { label: 'Collected Qty', field: 'Collected Qty', type: 'qty' },
-        { label: 'Collection %', field: 'Collection Qty %', type: 'percentage', getClass: getCollectionClass }
+        { label: 'Collection %', field: 'Collection Qty %', type: 'percentage', getClass: getCollectionClass },
+        { label: 'Last Month Card Coll %', field: 'Last Month Card Coll %', type: 'percentage' }
       ]
     },
     {
