@@ -153,6 +153,21 @@
   background: rgba(248, 113, 113, 0.2);
 }
 
+.card-highlight-red {
+  background: rgba(239, 68, 68, 0.15) !important;
+  border: 2px solid rgba(239, 68, 68, 0.5) !important;
+}
+
+[data-theme='dark'] .card-highlight-red {
+  background: rgba(248, 113, 113, 0.2) !important;
+  border: 2px solid rgba(248, 113, 113, 0.5) !important;
+}
+
+.card-highlight-red:hover {
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3) !important;
+  border-color: rgba(239, 68, 68, 0.7) !important;
+}
+
 @media (max-width: 768px) {
   .collection-cards-grid {
     grid-template-columns: 1fr;

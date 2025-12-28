@@ -120,6 +120,14 @@ function DealerOverview() {
       fields: [
         { label: 'Policy Wise Collection Short', field: 'Policy Wise Collection Short', type: 'amount' }
       ]
+    },
+    {
+      title: 'Due Reduced (Running)',
+      fields: [
+        { label: 'Last Month Closing', field: 'Previous Month Due', type: 'amount' },
+        { label: 'Running Due', field: 'Total Balance', type: 'amount' },
+        { label: 'Due Reduced', field: 'Due Reduce', type: 'amount' }
+      ]
     }
   ]
 
@@ -127,10 +135,10 @@ function DealerOverview() {
     let displayValue = value
     
     if (type === 'amount') {
-      const numVal = parseValue(value)
+      const numVal = Math.round(parseValue(value))
       displayValue = `৳ ${formatNumber(numVal)}`
     } else if (type === 'qty') {
-      displayValue = formatNumber(value)
+      displayValue = formatNumber(Math.round(parseValue(value)))
     } else if (type === 'percentage') {
       displayValue = value
     }
@@ -155,10 +163,16 @@ function DealerOverview() {
   }
 
   const renderCard = (cardGroup, branchData) => {
+    // Check if Sales VS Coll value is > 0 for highlighting
+    const salesVsCollValue = cardGroup.title === 'Sales VS Coll Running' 
+      ? parseValue(branchData ? branchData['Sales VS Coll'] : 0)
+      : 0
+    const isHighlighted = cardGroup.title === 'Sales VS Coll Running' && salesVsCollValue > 0
+
     return (
       <div 
         key={cardGroup.title} 
-        className="collection-metric-card"
+        className={`collection-metric-card ${isHighlighted ? 'card-highlight-red' : ''}`}
         onClick={() => handleCardAction(cardGroup.title)}
         role="button"
         tabIndex={0}

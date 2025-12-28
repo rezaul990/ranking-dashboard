@@ -227,11 +227,21 @@ function CollectionBranchView() {
     }
   }
 
+  const parsePercentage = (val) => parseFloat(String(val || '0%').replace('%', '')) || 0
+
   const renderCard = (cardGroup, branchData) => {
+    // Check if Collection card should be highlighted
+    let isHighlighted = false
+    if (cardGroup.title === 'Collection') {
+      const collectionPct = parsePercentage(branchData['Collection Qty %'])
+      const lastMonthPct = parsePercentage(branchData['Last Month Card Coll %'])
+      isHighlighted = collectionPct < lastMonthPct
+    }
+
     return (
       <div 
         key={cardGroup.title} 
-        className="collection-metric-card"
+        className={`collection-metric-card ${isHighlighted ? 'card-highlight-red' : ''}`}
         onClick={() => handleCardAction(cardGroup.title)}
         role="button"
         tabIndex={0}

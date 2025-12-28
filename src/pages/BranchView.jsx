@@ -62,6 +62,21 @@ function BranchView() {
     { label: 'Profit', target: 'Profit Target', ach: 'Profit Ach' }
   ]
 
+  // Cards that should be highlighted red when progress < 65%
+  const highlightCards65 = ['Retail', 'Hire', 'Dealer & Corporate Sales']
+  // Cards that should be highlighted red when progress < 90%
+  const highlightCards90 = ['INS / LPR', 'Exec Collection', 'Self Collection']
+  // Cards that should be highlighted red when progress < 100%
+  const highlightCards100 = ['Hire DP', 'Dealer & Corporate Collection']
+
+  const shouldHighlightCard = (label, pct) => {
+    if (highlightCards65.includes(label) && pct < 65) return true
+    if (highlightCards90.includes(label) && pct < 90) return true
+    if (highlightCards100.includes(label) && pct < 100) return true
+    if (label === 'Profit' && pct < 0) return true
+    return false
+  }
+
   if (loading) return <div className="loading">Loading data...</div>
   if (error) return <div className="error">{error}</div>
 
@@ -118,9 +133,10 @@ function BranchView() {
                 
                 const pct = calculatePercentage(totalTarget, totalAch)
                 const pctClass = getPercentageClass(pct)
+                const shouldHighlight = shouldHighlightCard(metric.label, pct)
 
                 return (
-                  <div key={idx} className="metric-card">
+                  <div key={idx} className={`metric-card ${shouldHighlight ? 'card-highlight-red' : ''}`}>
                     <div className="metric-label">{metric.label}</div>
                     <div className="metric-values">
                       <div className="metric-row">
@@ -163,9 +179,10 @@ function BranchView() {
                 const ach = selectedBranch[metric.ach]
                 const pct = calculatePercentage(target, ach)
                 const pctClass = getPercentageClass(pct)
+                const shouldHighlight = shouldHighlightCard(metric.label, pct)
 
                 return (
-                  <div key={idx} className="metric-card">
+                  <div key={idx} className={`metric-card ${shouldHighlight ? 'card-highlight-red' : ''}`}>
                     <div className="metric-label">{metric.label}</div>
                     <div className="metric-values">
                       <div className="metric-row">
