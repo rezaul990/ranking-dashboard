@@ -4,6 +4,7 @@ import './CollectionBranchView.css'
 import './CorporateOverview.css'
 import { parseCSV, formatNumber } from '../utils/dataUtils'
 import ScreenshotButton from '../components/ScreenshotButton'
+import RefreshButton from '../components/RefreshButton'
 
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQncKkos2W7Eow929EBmY_ZbqQzrxwUCAuLit03kqei2ho8ICBE5xcdp2-LHA2hPb2jbyov6FfClOF2/pub?output=csv'
 
@@ -331,7 +332,12 @@ function CorporateOverview() {
   if (error) return <div className="error">{error}</div>
 
   return (
-    <div className="branch-view">
+    <>
+      <div className="page-header-actions">
+        <div></div>
+        <RefreshButton onClick={fetchData} loading={loading} />
+      </div>
+      <div className="branch-view">
       <div className="branch-selector-card">
         <h2>Select Branch</h2>
         <div className="branch-list">
@@ -391,6 +397,7 @@ function CorporateOverview() {
         </>
       )}
     </div>
+    </>
   )
 }
 

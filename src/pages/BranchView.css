@@ -298,3 +298,13 @@
     print-color-adjust: exact !important;
   }
 }
+
+
+.page-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}

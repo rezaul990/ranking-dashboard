@@ -3,6 +3,7 @@ import './BranchView.css'
 import './CollectionBranchView.css'
 import { parseCSV, formatNumber } from '../utils/dataUtils'
 import ScreenshotButton from '../components/ScreenshotButton'
+import RefreshButton from '../components/RefreshButton'
 
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTXc-G_Yb3upkVljn0pXdzHqV5dAPr-TW47o9uKy8qQNRkiknwZx7wgSLESLsckivRHS73dRN3UaWcm/pub?output=csv'
 
@@ -310,6 +311,10 @@ function CollectionBranchView() {
 
   return (
     <>
+      <div className="page-header-actions">
+        <div></div>
+        <RefreshButton onClick={fetchData} loading={loading} />
+      </div>
       <div className="branch-view">
         <div className="branch-selector-card">
           <h2>Select Branch</h2>

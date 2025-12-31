@@ -3,6 +3,7 @@ import './BranchView.css'
 import './CollectionBranchView.css'
 import { parseCSV, formatNumber } from '../utils/dataUtils'
 import ScreenshotButton from '../components/ScreenshotButton'
+import RefreshButton from '../components/RefreshButton'
 
 // TODO: Replace with your actual spreadsheet link
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQzdPUUVNNNlUy4U0SElgzASaiAFYoW05indKbBvRG-A9-Rs0WNZkZhMueUMhsFL9j98DUJV4UUqWRM/pub?output=csv'
@@ -229,6 +230,10 @@ function DealerOverview() {
 
   return (
     <>
+      <div className="page-header-actions">
+        <div></div>
+        <RefreshButton onClick={fetchData} loading={loading} />
+      </div>
       <div className="branch-view">
         <div className="branch-selector-card">
           <h2>Select Branch</h2>

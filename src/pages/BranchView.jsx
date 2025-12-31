@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import './BranchView.css'
 import { parseCSV, calculatePercentage, getPercentageClass, formatNumber, extractUpdateDate } from '../utils/dataUtils'
 import ScreenshotButton from '../components/ScreenshotButton'
+import RefreshButton from '../components/RefreshButton'
 
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSfBMgoqCsNi4oAnvtFsSMEdxLLy1mdwFXLehQ2ZfjdHwHQq2mHGb0283g76EneTkFvKuvN8SPC9dll/pub?output=csv'
 
@@ -82,12 +83,15 @@ function BranchView() {
 
   return (
     <>
-      {updateDate && (
-        <div className="update-date-banner">
-          <span className="update-icon">📅</span>
-          <span className="update-text">Last Updated: {updateDate}</span>
-        </div>
-      )}
+      <div className="page-header-actions">
+        {updateDate && (
+          <div className="update-date-banner">
+            <span className="update-icon">📅</span>
+            <span className="update-text">Last Updated: {updateDate}</span>
+          </div>
+        )}
+        <RefreshButton onClick={fetchData} loading={loading} />
+      </div>
       
       <div className="branch-view">
         <div className="branch-selector-card">
