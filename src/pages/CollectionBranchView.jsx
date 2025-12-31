@@ -129,8 +129,12 @@ function CollectionBranchView() {
       ]
     },
     {
-      title: '3+ Month No Collection',
-      fields: [{ label: 'Quantity', field: '3+ Month No Coll', type: 'qty' }]
+      title: 'No Coll',
+      fields: [
+        { label: '3+ Month No Coll', field: '3+ Month No Coll', type: 'qty' },
+        { label: 'Only DP', field: 'Only DP', type: 'qty' },
+        { label: '1st Month No Coll', field: '1st Month No Coll', type: 'qty' }
+      ]
     },
     {
       title: 'Matured Overdue',
@@ -140,20 +144,13 @@ function CollectionBranchView() {
       ]
     },
     {
-      title: 'MRP Collected Qty',
-      fields: [{ label: 'Quantity', field: 'MRP Collected Qty', type: 'qty' }]
-    },
-    {
-      title: 'HCP Collected',
-      fields: [{ label: 'Quantity', field: 'HCP Collected', type: 'qty' }]
-    },
-    {
-      title: 'Only MRP Collected Qty',
-      fields: [{ label: 'Quantity', field: 'Only MRP Collected Qty', type: 'qty' }]
-    },
-    {
-      title: 'MRP+10% Qty',
-      fields: [{ label: 'Quantity', field: 'MRP+10% Qty', type: 'qty' }]
+      title: 'MRP+ Collected Qty',
+      fields: [
+        { label: 'MRP+ Qty', field: 'MRP Collected Qty', type: 'qty' },
+        { label: 'Hire Cash Qty', field: 'HCP Collected', type: 'qty' },
+        { label: 'Only MRP Qty', field: 'Only MRP Collected Qty', type: 'qty' },
+        { label: 'MRP+10% Qty', field: 'MRP+10% Qty', type: 'qty' }
+      ]
     },
     {
       title: 'Revert',
@@ -210,12 +207,9 @@ function CollectionBranchView() {
       'Mobile Overdue': 'https://docs.google.com/spreadsheets/d/1rIaSRs1SrmKfoGsSC07xN0QxuOENWZjWEnu4kepSkfc/edit?gid=0#gid=0',
       '2024 Overdue': 'https://docs.google.com/spreadsheets/d/1sozfJbjVe_pjTA0EX_E-Ax9KyUB3241wNPlr1tC-bMM/edit?gid=548224984#gid=548224984',
       '2025 Overdue': 'https://docs.google.com/spreadsheets/d/16uw6cHTROwrayGCJD9mWSc_0XdVcB-GsU-wB3Zzi9XQ/edit?gid=0#gid=0',
-      '3+ Month No Collection': 'https://docs.google.com/spreadsheets/d/1USOjHngxvh5WmDpkF72CtpyGjkCERZz0wQcZvkdICTU/edit?gid=0#gid=0',
+      'No Coll': 'https://docs.google.com/spreadsheets/d/1USOjHngxvh5WmDpkF72CtpyGjkCERZz0wQcZvkdICTU/edit?gid=0#gid=0',
       'Matured Overdue': 'https://docs.google.com/spreadsheets/d/1IChJZP8LR9UVkZIA_PNGYMZx7UPOOkC-RwzD7GqVPLY/edit?gid=1004473595#gid=1004473595',
-      'MRP Collected Qty': 'https://docs.google.com/spreadsheets/d/1rIaSRs1SrmKfoGsSC07xN0QxuOENWZjWEnu4kepSkfc/edit?gid=0#gid=0',
-      'HCP Collected': 'https://docs.google.com/spreadsheets/d/1rIaSRs1SrmKfoGsSC07xN0QxuOENWZjWEnu4kepSkfc/edit?gid=0#gid=0',
-      'Only MRP Collected Qty': 'https://docs.google.com/spreadsheets/d/1rIaSRs1SrmKfoGsSC07xN0QxuOENWZjWEnu4kepSkfc/edit?gid=0#gid=0',
-      'MRP+10% Qty': 'https://docs.google.com/spreadsheets/d/1OhT3yV_yAOjVbz4c8dKN-cgdlhWZw6kv1O0wG7xVIlE/edit?gid=0#gid=0',
+      'MRP+ Collected Qty': 'https://docs.google.com/spreadsheets/d/1rIaSRs1SrmKfoGsSC07xN0QxuOENWZjWEnu4kepSkfc/edit?gid=0#gid=0',
       'Revert': 'https://docs.google.com/spreadsheets/d/1IRLUIsWS-Icu05NZ2ZE71-QnSc5BwnV1K4vqVulWWG4/edit?gid=0#gid=0',
       'Employee Corruption': 'https://docs.google.com/spreadsheets/d/1IRLUIsWS-Icu05NZ2ZE71-QnSc5BwnV1K4vqVulWWG4/edit?gid=0#gid=0'
     }
@@ -237,6 +231,13 @@ function CollectionBranchView() {
       const collectionPct = parsePercentage(branchData['Collection Qty %'])
       const lastMonthPct = parsePercentage(branchData['Last Month Card Coll %'])
       isHighlighted = collectionPct < lastMonthPct
+    }
+
+    // Highlight No Coll card if 1st Month No Coll > 0 or Only DP > 0
+    if (cardGroup.title === 'No Coll') {
+      const firstMonthNoColl = parseIntValue(branchData['1st Month No Coll'])
+      const onlyDP = parseIntValue(branchData['Only DP'])
+      isHighlighted = firstMonthNoColl > 0 || onlyDP > 0
     }
 
     return (
