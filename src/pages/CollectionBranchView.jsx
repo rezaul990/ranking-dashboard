@@ -10,7 +10,7 @@ const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTXc-G_Yb3upkVl
 function CollectionBranchView() {
   const [data, setData] = useState([])
   const [selectedBranch, setSelectedBranch] = useState(null)
-  const [showAllBranches, setShowAllBranches] = useState(false)
+  const [showAllBranches, setShowAllBranches] = useState(true)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const detailsRef = useRef(null)
