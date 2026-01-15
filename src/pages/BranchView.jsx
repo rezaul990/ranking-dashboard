@@ -178,6 +178,17 @@ function BranchView() {
             </div>
 
             <div className="metrics-grid">
+              {/* Ranking Card - First card, more visible */}
+              {selectedBranch && (
+                <div className="metric-card ranking-card">
+                  <div className="metric-label">🏆 Ranking (PSD)</div>
+                  <div className="metric-values">
+                    <div className="metric-row">
+                      <span className="ranking-value">{selectedBranch['Ranking (PSD)'] || '-'}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
               {metrics.map((metric, idx) => {
                 const target = selectedBranch[metric.target]
                 const ach = selectedBranch[metric.ach]

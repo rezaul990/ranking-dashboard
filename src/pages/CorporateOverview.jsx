@@ -334,7 +334,6 @@ function CorporateOverview() {
   return (
     <>
       <div className="page-header-actions">
-        <div></div>
         <RefreshButton onClick={fetchData} loading={loading} />
       </div>
       <div className="branch-view">

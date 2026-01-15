@@ -79,12 +79,11 @@ function CollectionBranchView() {
       ]
     },
     {
-      title: 'Running AC (Collectible)',
-      fields: [{ label: 'Quantity', field: 'Running AC (Collectilbe)', type: 'qty' }]
-    },
-    {
-      title: 'Running AC (POS)',
-      fields: [{ label: 'Quantity', field: 'Running AC (POS)', type: 'qty' }]
+      title: 'Running AC',
+      fields: [
+        { label: 'Collectible', field: 'Running AC (Collectilbe)', type: 'qty' },
+        { label: 'POS', field: 'Running AC (POS)', type: 'qty' }
+      ]
     },
     {
       title: 'Overdue',
@@ -93,6 +92,14 @@ function CollectionBranchView() {
         { label: 'Running Month', field: 'Overdue Running Month', type: 'amount' },
         { label: 'Increase/Decrease', field: 'Overdue Increase/Decrease', type: 'amount', getClass: getIncreaseDecreaseClass },
         { label: 'Overdue %', field: 'Overdue %', type: 'percentage', getClass: getOverdueClass }
+      ]
+    },
+    {
+      title: 'Overdue Structure',
+      fields: [
+        { label: '10K+ OD Qty', field: '10K+ OD Qty', type: 'qty' },
+        { label: '20K+ OD Qty', field: '20K+ OD Qty', type: 'qty' },
+        { label: 'Mature Qty', field: 'Matured Overdue Qty', type: 'qty' }
       ]
     },
     {
@@ -200,9 +207,9 @@ function CollectionBranchView() {
     // Card links mapping
     const cardLinks = {
       'Hire Outstanding': 'https://docs.google.com/spreadsheets/d/1rIaSRs1SrmKfoGsSC07xN0QxuOENWZjWEnu4kepSkfc/edit?gid=0#gid=0',
-      'Running AC (Collectible)': 'https://docs.google.com/spreadsheets/d/1rIaSRs1SrmKfoGsSC07xN0QxuOENWZjWEnu4kepSkfc/edit?gid=0#gid=0',
-      'Running AC (POS)': null, // No link provided
+      'Running AC': 'https://docs.google.com/spreadsheets/d/1rIaSRs1SrmKfoGsSC07xN0QxuOENWZjWEnu4kepSkfc/edit?gid=0#gid=0',
       'Overdue': 'https://docs.google.com/spreadsheets/d/1TDYIloJEJHJy00IhtWLXJCFpTweHKa5MNmKdqNrX9zA/edit?gid=0#gid=0',
+      'Overdue Structure': 'https://docs.google.com/spreadsheets/d/1TDYIloJEJHJy00IhtWLXJCFpTweHKa5MNmKdqNrX9zA/edit?gid=0#gid=0',
       'Collection': 'https://docs.google.com/spreadsheets/d/1rIaSRs1SrmKfoGsSC07xN0QxuOENWZjWEnu4kepSkfc/edit?gid=0#gid=0',
       'Mobile Overdue': 'https://docs.google.com/spreadsheets/d/1rIaSRs1SrmKfoGsSC07xN0QxuOENWZjWEnu4kepSkfc/edit?gid=0#gid=0',
       '2024 Overdue': 'https://docs.google.com/spreadsheets/d/1sozfJbjVe_pjTA0EX_E-Ax9KyUB3241wNPlr1tC-bMM/edit?gid=548224984#gid=548224984',
@@ -238,6 +245,12 @@ function CollectionBranchView() {
       const firstMonthNoColl = parseIntValue(branchData['1st Month No Coll'])
       const onlyDP = parseIntValue(branchData['Only DP'])
       isHighlighted = firstMonthNoColl > 0 || onlyDP > 0
+    }
+
+    // Highlight Overdue Structure card if 10K+ OD Qty > 10
+    if (cardGroup.title === 'Overdue Structure') {
+      const tenKODQty = parseIntValue(branchData['10K+ OD Qty'])
+      isHighlighted = tenKODQty > 10
     }
 
     return (
@@ -313,7 +326,6 @@ function CollectionBranchView() {
   return (
     <>
       <div className="page-header-actions">
-        <div></div>
         <RefreshButton onClick={fetchData} loading={loading} />
       </div>
       <div className="branch-view">
