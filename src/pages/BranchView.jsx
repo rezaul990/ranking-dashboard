@@ -51,9 +51,9 @@ function BranchView() {
   }
 
   const metrics = [
-    { label: 'Total', target: 'Total Target', ach: 'Total Ach' },
-    { label: 'Retail', target: 'Retail Target', ach: 'Retial Ach' },
-    { label: 'Hire', target: 'Hire Target', ach: 'Hire Ach' },
+    { label: 'Total', target: 'Total Target', ach: 'Total Ach', prevYear: 'Previous Year Sale' },
+    { label: 'Retail', target: 'Retail Target', ach: 'Retial Ach', prevYear: 'Previous Year Retail' },
+    { label: 'Hire', target: 'Hire Target', ach: 'Hire Ach', prevYear: 'Previous Year Hire' },
     { label: 'Hire DP', target: 'Hire DP Target', ach: 'Hire DP Ach' },
     { label: 'INS / LPR', target: 'INS or LPR Target', ach: 'INS or LPR Ach' },
     { label: 'Exec Collection', target: 'Hire Collection Executive (Qty.) Target', ach: 'Hire Collection Executive (Qty.) Ach' },
@@ -129,15 +129,27 @@ function BranchView() {
               {metrics.map((metric, idx) => {
                 let totalTarget = 0
                 let totalAch = 0
+                let totalPrevYear = 0
                 
                 data.forEach(branch => {
                   totalTarget += Number(String(branch[metric.target] || 0).replace(/,/g, ''))
                   totalAch += Number(String(branch[metric.ach] || 0).replace(/,/g, ''))
+                  if (metric.prevYear) {
+                    totalPrevYear += Number(String(branch[metric.prevYear] || 0).replace(/,/g, ''))
+                  }
                 })
                 
                 const pct = calculatePercentage(totalTarget, totalAch)
                 const pctClass = getPercentageClass(pct)
                 const shouldHighlight = shouldHighlightCard(metric.label, pct)
+
+                // Calculate growth/degrowth for Total, Retail, and Hire cards
+                let growthDegrowth = null
+                let growthClass = ''
+                if ((metric.label === 'Total' || metric.label === 'Retail' || metric.label === 'Hire') && metric.prevYear && totalPrevYear > 0) {
+                  growthDegrowth = ((totalAch - totalPrevYear) / totalPrevYear * 100).toFixed(2)
+                  growthClass = growthDegrowth >= 0 ? 'good' : 'bad'
+                }
 
                 return (
                   <div key={idx} className={`metric-card ${shouldHighlight ? 'card-highlight-red' : ''}`}>
@@ -151,6 +163,18 @@ function BranchView() {
                         <span className="metric-title">Achievement:</span>
                         <span className="metric-value">{formatNumber(totalAch)}</span>
                       </div>
+                      {metric.prevYear && (
+                        <div className="metric-row">
+                          <span className="metric-title">Previous Year:</span>
+                          <span className="metric-value">{formatNumber(totalPrevYear)}</span>
+                        </div>
+                      )}
+                      {growthDegrowth !== null && (
+                        <div className="metric-row">
+                          <span className="metric-title">Growth/Degrowth:</span>
+                          <span className={`metric-percentage ${growthClass}`}>{growthDegrowth}%</span>
+                        </div>
+                      )}
                       <div className="metric-row">
                         <span className="metric-title">Progress:</span>
                         <span className={`metric-percentage ${pctClass}`}>{pct}%</span>
@@ -196,6 +220,18 @@ function BranchView() {
                 const pctClass = getPercentageClass(pct)
                 const shouldHighlight = shouldHighlightCard(metric.label, pct)
 
+                // Calculate growth/degrowth for Total, Retail, and Hire cards
+                let growthDegrowth = null
+                let growthClass = ''
+                if ((metric.label === 'Total' || metric.label === 'Retail' || metric.label === 'Hire') && metric.prevYear) {
+                  const prevYear = Number(String(selectedBranch[metric.prevYear] || 0).replace(/,/g, ''))
+                  const currentAch = Number(String(ach || 0).replace(/,/g, ''))
+                  if (prevYear > 0) {
+                    growthDegrowth = ((currentAch - prevYear) / prevYear * 100).toFixed(2)
+                    growthClass = growthDegrowth >= 0 ? 'good' : 'bad'
+                  }
+                }
+
                 return (
                   <div key={idx} className={`metric-card ${shouldHighlight ? 'card-highlight-red' : ''}`}>
                     <div className="metric-label">{metric.label}</div>
@@ -208,6 +244,18 @@ function BranchView() {
                         <span className="metric-title">Achievement:</span>
                         <span className="metric-value">{formatNumber(ach)}</span>
                       </div>
+                      {metric.prevYear && (
+                        <div className="metric-row">
+                          <span className="metric-title">Previous Year:</span>
+                          <span className="metric-value">{formatNumber(selectedBranch[metric.prevYear])}</span>
+                        </div>
+                      )}
+                      {growthDegrowth !== null && (
+                        <div className="metric-row">
+                          <span className="metric-title">Growth/Degrowth:</span>
+                          <span className={`metric-percentage ${growthClass}`}>{growthDegrowth}%</span>
+                        </div>
+                      )}
                       <div className="metric-row">
                         <span className="metric-title">Progress:</span>
                         <span className={`metric-percentage ${pctClass}`}>{pct}%</span>
