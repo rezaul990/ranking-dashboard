@@ -4,26 +4,35 @@ import './CollectionBranchView.css'
 import { parseCSV, formatNumber } from '../utils/dataUtils'
 import ScreenshotButton from '../components/ScreenshotButton'
 import RefreshButton from '../components/RefreshButton'
+import PlazaPDFButton from '../components/PlazaPDFButton'
 
 // TODO: Replace with your actual spreadsheet link
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQzdPUUVNNNlUy4U0SElgzASaiAFYoW05indKbBvRG-A9-Rs0WNZkZhMueUMhsFL9j98DUJV4UUqWRM/pub?output=csv'
 
-function DealerOverview() {
-  const [data, setData] = useState([])
+function DealerOverview({ data: propData }) {
+  const [data, setData] = useState(propData || [])
   const [selectedBranch, setSelectedBranch] = useState(null)
   const [showAllBranches, setShowAllBranches] = useState(true)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(!propData)
   const [error, setError] = useState(null)
   const detailsRef = useRef(null)
 
   useEffect(() => {
-    if (CSV_URL) {
-      fetchData()
-    } else {
+    if (propData && propData.length > 0) {
+      setData(propData)
       setLoading(false)
-      setError('Spreadsheet link not configured yet')
+      if (propData.length > 0) {
+        setSelectedBranch(propData[0])
+      }
+    } else if (!propData) {
+      if (CSV_URL) {
+        fetchData()
+      } else {
+        setLoading(false)
+        setError('Spreadsheet link not configured yet')
+      }
     }
-  }, [])
+  }, [propData])
 
   const fetchData = async () => {
     try {
@@ -82,9 +91,60 @@ function DealerOverview() {
       ]
     },
     {
-      title: '0%-% Dealer Qty',
+      title: 'AVG Coll %',
       fields: [
-        { label: 'Quantity', field: '0%-% Dealer Qty', type: 'qty' }
+        { label: 'Dealer Qty', field: 'Dealer Qty', type: 'qty' },
+        { label: 'Dealer Due', field: 'Dealer Due', type: 'amount' },
+        { label: 'Dealer Avg %', field: 'Dealer Avg %', type: 'percentage' }
+      ]
+    },
+    {
+      title: 'Litigate',
+      fields: [
+        { label: 'Litigate Qty', field: 'Litigate Qty', type: 'qty' },
+        { label: 'Litigate Due', field: 'Litigate Due', type: 'amount' }
+      ]
+    },
+    {
+      title: '0%-5%',
+      fields: [
+        { label: '0%-5% Dealer Qty', field: '0%-5% Dealer Qty', type: 'qty' },
+        { label: '0%-5% Due', field: '0%-5% Due', type: 'amount' }
+      ]
+    },
+    {
+      title: '0%',
+      fields: [
+        { label: '0% Dealer Qty', field: '0% Dealer Qty', type: 'qty' },
+        { label: '0%-5% Due', field: '0%-5% Due', type: 'amount' }
+      ]
+    },
+    {
+      title: '5%-10%',
+      fields: [
+        { label: '5%-10% Dealer Qty', field: '5%-10% Dealer Qty', type: 'qty' },
+        { label: '5%-10% Due', field: '5%-10% Due', type: 'amount' }
+      ]
+    },
+    {
+      title: '10%-15%',
+      fields: [
+        { label: '10%-15% Dealer Qty', field: '10%-15% Dealer Qty', type: 'qty' },
+        { label: '10%-15% Due', field: '10%-15% Due', type: 'amount' }
+      ]
+    },
+    {
+      title: '15%-25%',
+      fields: [
+        { label: '15%-25% Dealer Qty', field: '15%-25% Dealer Qty', type: 'qty' },
+        { label: '15%-25% Due', field: '15%-25% Due', type: 'amount' }
+      ]
+    },
+    {
+      title: '25%+',
+      fields: [
+        { label: '25%+ Dealer Qty', field: '25%+ Dealer Qty', type: 'qty' },
+        { label: '25%+ Due', field: '25%+ Due', type: 'amount' }
       ]
     },
     {
@@ -232,6 +292,7 @@ function DealerOverview() {
     <>
       <div className="page-header-actions">
         <RefreshButton onClick={fetchData} loading={loading} />
+        <PlazaPDFButton data={data} />
       </div>
       <div className="branch-view">
         <div className="branch-selector-card">

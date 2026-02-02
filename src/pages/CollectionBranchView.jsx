@@ -74,6 +74,7 @@ function CollectionBranchView() {
       title: 'Hire Outstanding',
       fields: [
         { label: 'Hire Outstanding', field: 'Hire Outstanding', type: 'amount' },
+        { label: 'Outstanding POS', field: 'Outstanding POS', type: 'amount' },
         { label: 'New Outstanding Added', field: 'New Outstanding Added', type: 'amount' },
         { label: 'Total Update Outstanding', field: 'Total Update Outstanding', type: 'amount' }
       ]
@@ -139,6 +140,7 @@ function CollectionBranchView() {
       title: 'No Coll',
       fields: [
         { label: '3+ Month No Coll', field: '3+ Month No Coll', type: 'qty' },
+        { label: '6 Month No Coll', field: '6 Month No Coll', type: 'qty' },
         { label: 'Only DP', field: 'Only DP', type: 'qty' },
         { label: '1st Month No Coll', field: '1st Month No Coll', type: 'qty' }
       ]
@@ -147,7 +149,9 @@ function CollectionBranchView() {
       title: 'Matured Overdue',
       fields: [
         { label: 'Quantity', field: 'Matured Overdue Qty', type: 'qty' },
-        { label: 'Amount', field: 'Matured Overdue Amount', type: 'amount' }
+        { label: 'Amount', field: 'Matured Overdue Amount', type: 'amount' },
+        { label: 'Mature Qty POS', field: 'Mature Qty POS', type: 'qty' },
+        { label: 'Mature Amount POS', field: 'Mature Amount POS', type: 'amount' }
       ]
     },
     {
