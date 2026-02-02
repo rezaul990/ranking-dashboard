@@ -8,11 +8,12 @@ function Navigation({ currentPage, onPageChange }) {
         onClick={() => onPageChange('branch')}
       >
         <span className="nav-icon">🏢</span>
-        <span>Branch View</span>
+        <span>9 Criteria</span>
       </button>
       <button
         className={`nav-button ${currentPage === 'dashboard' ? 'active' : ''}`}
         onClick={() => onPageChange('dashboard')}
+        style={{ display: 'none' }}
       >
         <span className="nav-icon">📊</span>
         <span>Table View</span>
@@ -22,11 +23,12 @@ function Navigation({ currentPage, onPageChange }) {
         onClick={() => onPageChange('collectionBranch')}
       >
         <span className="nav-icon">💰</span>
-        <span>Collection Branch</span>
+        <span>Hire Overview</span>
       </button>
       <button
         className={`nav-button ${currentPage === 'collection' ? 'active' : ''}`}
         onClick={() => onPageChange('collection')}
+        style={{ display: 'none' }}
       >
         <span className="nav-icon">📋</span>
         <span>Collection Table</span>
