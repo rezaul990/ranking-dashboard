@@ -100,7 +100,9 @@ function CollectionBranchView() {
       fields: [
         { label: '10K+ OD Qty', field: '10K+ OD Qty', type: 'qty' },
         { label: '20K+ OD Qty', field: '20K+ OD Qty', type: 'qty' },
-        { label: 'Mature Qty', field: 'Matured Overdue Qty', type: 'qty' }
+        { label: 'Mature Qty', field: 'Matured Overdue Qty', type: 'qty' },
+        { label: 'Total Overdue AC Qty (POS)', field: 'Total Overdue AC Qty (POS)', type: 'qty' },
+        { label: 'Total Overdue AC Qty (Collectible)', field: 'Total Overdue AC Qty (Collectible)', type: 'qty' }
       ]
     },
     {
