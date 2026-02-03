@@ -189,6 +189,20 @@ function DealerOverview({ data: propData }) {
         { label: 'Running Due', field: 'Total Balance', type: 'amount' },
         { label: 'Due Reduced', field: 'Due Reduce', type: 'amount' }
       ]
+    },
+    {
+      title: 'Dealer Overdue',
+      fields: [
+        { label: 'Dealer Overdue Amount', field: 'Dealer Overdue Amount', type: 'amount' },
+        { label: 'Dealer Overdue %', field: 'Dealer Overdue %', type: 'percentage' }
+      ]
+    },
+    {
+      title: 'Risk Money',
+      fields: [
+        { label: 'Dealer Risk Money Amount', field: 'Dealer Risk Money Amount', type: 'amount' },
+        { label: 'Dealer Risk Money %', field: 'Dealer Risk Money %', type: 'percentage' }
+      ]
     }
   ]
 
