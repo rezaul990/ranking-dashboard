@@ -6,8 +6,8 @@ import ScreenshotButton from '../components/ScreenshotButton'
 import RefreshButton from '../components/RefreshButton'
 import PlazaPDFButton from '../components/PlazaPDFButton'
 
-// TODO: Replace with your actual spreadsheet link
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQzdPUUVNNNlUy4U0SElgzASaiAFYoW05indKbBvRG-A9-Rs0WNZkZhMueUMhsFL9j98DUJV4UUqWRM/pub?output=csv'
+// Use gviz (Google Visualization) format which exports all columns
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQzdPUUVNNNlUy4U0SElgzASaiAFYoW05indKbBvRG-A9-Rs0WNZkZhMueUMhsFL9j98DUJV4UUqWRM/pub?output=csv&gid=0'
 
 function DealerOverview({ data: propData }) {
   const [data, setData] = useState(propData || [])
@@ -269,7 +269,24 @@ function DealerOverview({ data: propData }) {
         </div>
         <div className="card-content">
           {cardGroup.fields.map((field) => {
-            const value = branchData ? branchData[field.field] : 0
+            let value = branchData ? branchData[field.field] : 0
+            
+            // For "Dealer Avg %" card when showing all branches, use Area row value
+            if (cardGroup.title === 'Dealer Avg %' && showAllBranches && field.field === 'Dealer Avg %') {
+              const areaRow = data.find(row => row['Branch Name'] && row['Branch Name'].toLowerCase() === 'area')
+              if (areaRow && areaRow['Dealer Avg %']) {
+                value = areaRow['Dealer Avg %']
+              }
+            }
+            
+            // For "AVG Coll %" card when showing all branches, also use Area row value
+            if (cardGroup.title === 'AVG Coll %' && showAllBranches && field.field === 'Dealer Avg %') {
+              const areaRow = data.find(row => row['Branch Name'] && row['Branch Name'].toLowerCase() === 'area')
+              if (areaRow && areaRow['Dealer Avg %']) {
+                value = areaRow['Dealer Avg %']
+              }
+            }
+            
             const { displayValue, className } = formatValue(value, field.type)
             
             return (
@@ -287,12 +304,27 @@ function DealerOverview({ data: propData }) {
   const calculateAllBranchesData = () => {
     const aggregated = {}
     
+    // Check if there's an "Area" row with summary data
+    const areaRow = data.find(row => row['Branch Name'] && row['Branch Name'].toLowerCase() === 'area')
+    console.log('Area row found:', areaRow)
+    console.log('All branch names:', data.map(d => d['Branch Name']))
+    
     cardGroups.forEach(group => {
       group.fields.forEach(field => {
-        const total = data.reduce((sum, branch) => {
-          return sum + (field.type === 'qty' ? parseIntValue(branch[field.field]) : parseValue(branch[field.field]))
-        }, 0)
-        aggregated[field.field] = total
+        // For Dealer Avg %, use the Area row value if available
+        if (field.field === 'Dealer Avg %' && areaRow && areaRow['Dealer Avg %']) {
+          console.log('Using Area Dealer Avg %:', areaRow['Dealer Avg %'])
+          aggregated[field.field] = areaRow['Dealer Avg %']
+        } else {
+          const total = data.reduce((sum, branch) => {
+            // Skip the Area row when calculating totals
+            if (branch['Branch Name'] && branch['Branch Name'].toLowerCase() === 'area') {
+              return sum
+            }
+            return sum + (field.type === 'qty' ? parseIntValue(branch[field.field]) : parseValue(branch[field.field]))
+          }, 0)
+          aggregated[field.field] = total
+        }
       })
     })
     
