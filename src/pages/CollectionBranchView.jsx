@@ -96,6 +96,15 @@ function CollectionBranchView() {
       ]
     },
     {
+      title: 'Overdue (POS)',
+      fields: [
+        { label: 'Opening Overdue (POS)', field: 'Opening Overdue (POS)', type: 'amount' },
+        { label: 'Closing Overdue (POS)', field: 'Closing Overdue (POS)', type: 'amount' },
+        { label: 'Increase/Decrease', field: 'Overdue (POS) Increase/Decrease', type: 'amount', getClass: getIncreaseDecreaseClass },
+        { label: 'Overdue % (POS)', field: 'Overdue % (POS)', type: 'percentage' }
+      ]
+    },
+    {
       title: 'Overdue Structure',
       fields: [
         { label: '10K+ OD Qty', field: '10K+ OD Qty', type: 'qty' },
@@ -284,7 +293,26 @@ function CollectionBranchView() {
         </div>
         <div className="card-content">
           {cardGroup.fields.map((field) => {
-            const value = branchData[field.field]
+            let value = branchData[field.field]
+            
+            // Calculate Increase/Decrease for Overdue (POS) card
+            if (cardGroup.title === 'Overdue (POS)' && field.field === 'Overdue (POS) Increase/Decrease') {
+              const opening = parseValue(branchData['Opening Overdue (POS)'])
+              const closing = parseValue(branchData['Closing Overdue (POS)'])
+              value = closing - opening
+            }
+            
+            // Calculate Overdue % (POS) = (Closing Overdue (POS) / Outstanding POS) * 100
+            if (cardGroup.title === 'Overdue (POS)' && field.field === 'Overdue % (POS)') {
+              const closingOverduePOS = parseValue(branchData['Closing Overdue (POS)'])
+              const outstandingPOS = parseValue(branchData['Outstanding POS'])
+              if (outstandingPOS > 0) {
+                value = ((closingOverduePOS / outstandingPOS) * 100).toFixed(2) + '%'
+              } else {
+                value = '0%'
+              }
+            }
+            
             const { displayValue, className } = formatValue(value, field.type, field.getClass)
             
             return (
