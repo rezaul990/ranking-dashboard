@@ -58,7 +58,7 @@ function BranchView() {
     { label: 'INS / LPR', target: 'INS or LPR Target', ach: 'INS or LPR Ach' },
     { label: 'Exec Collection', target: 'Hire Collection Executive (Qty.) Target', ach: 'Hire Collection Executive (Qty.) Ach' },
     { label: 'Self Collection', target: 'Hire Collection Self (Qty.) Target', ach: 'Hire Collection Self (Qty.) Ach' },
-    { label: 'Dealer & Corporate Sales', target: 'Dealer & Corporate Sales Target', ach: 'Dealer & Corporate Sales Ach' },
+    { label: 'Dealer & Corporate Sales', target: 'Dealer & Corporate Sales Target', ach: 'Dealer & Corporate Sales Ach', prevDealer: 'Previous Dealer Sale', prevCorporate: 'Previous Corporate Sale' },
     { label: 'Dealer & Corporate Collection', target: 'Dealer & Corporate Collection Target', ach: 'Dealer & Corporate Collection Ach' },
     { label: 'Profit', target: 'Profit Target', ach: 'Profit Ach' }
   ]
@@ -130,12 +130,20 @@ function BranchView() {
                 let totalTarget = 0
                 let totalAch = 0
                 let totalPrevYear = 0
+                let totalPrevDealer = 0
+                let totalPrevCorporate = 0
                 
                 data.forEach(branch => {
                   totalTarget += Number(String(branch[metric.target] || 0).replace(/,/g, ''))
                   totalAch += Number(String(branch[metric.ach] || 0).replace(/,/g, ''))
                   if (metric.prevYear) {
                     totalPrevYear += Number(String(branch[metric.prevYear] || 0).replace(/,/g, ''))
+                  }
+                  if (metric.prevDealer) {
+                    totalPrevDealer += Number(String(branch[metric.prevDealer] || 0).replace(/,/g, ''))
+                  }
+                  if (metric.prevCorporate) {
+                    totalPrevCorporate += Number(String(branch[metric.prevCorporate] || 0).replace(/,/g, ''))
                   }
                 })
                 
@@ -167,6 +175,18 @@ function BranchView() {
                         <div className="metric-row">
                           <span className="metric-title">Previous Year:</span>
                           <span className="metric-value">{formatNumber(totalPrevYear)}</span>
+                        </div>
+                      )}
+                      {metric.prevDealer && (
+                        <div className="metric-row">
+                          <span className="metric-title">Previous Dealer Sale:</span>
+                          <span className="metric-value">{formatNumber(totalPrevDealer)}</span>
+                        </div>
+                      )}
+                      {metric.prevCorporate && (
+                        <div className="metric-row">
+                          <span className="metric-title">Previous Corporate Sale:</span>
+                          <span className="metric-value">{formatNumber(totalPrevCorporate)}</span>
                         </div>
                       )}
                       {growthDegrowth !== null && (
@@ -248,6 +268,18 @@ function BranchView() {
                         <div className="metric-row">
                           <span className="metric-title">Previous Year:</span>
                           <span className="metric-value">{formatNumber(selectedBranch[metric.prevYear])}</span>
+                        </div>
+                      )}
+                      {metric.prevDealer && (
+                        <div className="metric-row">
+                          <span className="metric-title">Previous Dealer Sale:</span>
+                          <span className="metric-value">{formatNumber(selectedBranch[metric.prevDealer])}</span>
+                        </div>
+                      )}
+                      {metric.prevCorporate && (
+                        <div className="metric-row">
+                          <span className="metric-title">Previous Corporate Sale:</span>
+                          <span className="metric-value">{formatNumber(selectedBranch[metric.prevCorporate])}</span>
                         </div>
                       )}
                       {growthDegrowth !== null && (

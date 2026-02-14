@@ -73,10 +73,10 @@ function CollectionBranchView() {
     {
       title: 'Hire Outstanding',
       fields: [
-        { label: 'Hire Outstanding', field: 'Hire Outstanding', type: 'amount' },
+        { label: 'Hire Outstanding (Manual)', field: 'Hire Outstanding', type: 'amount' },
         { label: 'Outstanding POS', field: 'Outstanding POS', type: 'amount' },
         { label: 'New Outstanding Added', field: 'New Outstanding Added', type: 'amount' },
-        { label: 'Total Update Outstanding', field: 'Total Update Outstanding', type: 'amount' }
+        { label: 'Total Update Outstanding (Manual)', field: 'Total Update Outstanding', type: 'amount' }
       ]
     },
     {
@@ -92,7 +92,8 @@ function CollectionBranchView() {
         { label: 'Previous Month', field: 'Overdue Previous Month', type: 'amount' },
         { label: 'Running Month', field: 'Overdue Running Month', type: 'amount' },
         { label: 'Increase/Decrease', field: 'Overdue Increase/Decrease', type: 'amount', getClass: getIncreaseDecreaseClass },
-        { label: 'Overdue %', field: 'Overdue %', type: 'percentage', getClass: getOverdueClass }
+        { label: 'Overdue %', field: 'Overdue %', type: 'percentage', getClass: getOverdueClass },
+        { label: 'Last Month Overdue %', field: 'Last Month Overdue %', type: 'percentage' }
       ]
     },
     {
