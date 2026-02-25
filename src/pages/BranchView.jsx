@@ -189,6 +189,14 @@ function BranchView() {
                           <span className="metric-value">{formatNumber(totalPrevCorporate)}</span>
                         </div>
                       )}
+                      {metric.label === 'Total' && metric.prevYear && totalPrevYear > totalAch && (
+                        <div className="metric-row">
+                          <span className="metric-title">Need to Growth:</span>
+                          <span className={`metric-value ${(totalPrevYear - totalAch) > 0 ? 'bad' : 'good'}`}>
+                            {formatNumber(totalPrevYear - totalAch)}
+                          </span>
+                        </div>
+                      )}
                       {growthDegrowth !== null && (
                         <div className="metric-row">
                           <span className="metric-title">Growth/Degrowth:</span>
@@ -280,6 +288,16 @@ function BranchView() {
                         <div className="metric-row">
                           <span className="metric-title">Previous Corporate Sale:</span>
                           <span className="metric-value">{formatNumber(selectedBranch[metric.prevCorporate])}</span>
+                        </div>
+                      )}
+                      {metric.label === 'Total' && metric.prevYear && (
+                        <div className="metric-row">
+                          <span className="metric-title">Need to Growth:</span>
+                          <span className={`metric-value ${
+                            (Number(String(selectedBranch[metric.prevYear] || 0).replace(/,/g, '')) - Number(String(ach || 0).replace(/,/g, ''))) > 0 ? 'bad' : 'good'
+                          }`}>
+                            {formatNumber(Number(String(selectedBranch[metric.prevYear] || 0).replace(/,/g, '')) - Number(String(ach || 0).replace(/,/g, '')))}
+                          </span>
                         </div>
                       )}
                       {growthDegrowth !== null && (
