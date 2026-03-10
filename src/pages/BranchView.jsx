@@ -51,7 +51,7 @@ function BranchView() {
   }
 
   const metrics = [
-    { label: 'Total', target: 'Total Target', ach: 'Total Ach', prevYear: 'Previous Year Sale' },
+    { label: 'Total', target: 'Total Target', ach: 'Total Ach', prevYear: 'Previous Year Total Sale' },
     { label: 'Retail', target: 'Retail Target', ach: 'Retial Ach', prevYear: 'Previous Year Retail' },
     { label: 'Hire', target: 'Hire Target', ach: 'Hire Ach', prevYear: 'Previous Year Hire' },
     { label: 'Hire DP', target: 'Hire DP Target', ach: 'Hire DP Ach' },
@@ -83,17 +83,19 @@ function BranchView() {
 
   return (
     <>
-      <div className="page-header-actions">
-        {updateDate && (
-          <div className="update-date-banner">
-            <span className="update-icon">📅</span>
-            <span className="update-text">Last Updated: {updateDate}</span>
-          </div>
-        )}
-        <RefreshButton onClick={fetchData} loading={loading} />
-      </div>
-      
       <div className="branch-view">
+        <div className="page-title-section">
+          <h1 className="page-title">Nine Criteria Report</h1>
+          {updateDate && (
+            <div className="update-date-banner">
+              <span className="update-icon">📅</span>
+              <span className="update-text">Last Updated: {updateDate}</span>
+            </div>
+          )}
+        </div>
+        <div className="page-actions">
+          <RefreshButton onClick={fetchData} loading={loading} />
+        </div>
         <div className="branch-selector-card">
           <h2>Select Branch</h2>
           <div className="branch-list">
