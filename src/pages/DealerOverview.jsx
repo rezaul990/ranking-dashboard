@@ -15,6 +15,7 @@ function DealerOverview({ data: propData }) {
   const [showAllBranches, setShowAllBranches] = useState(true)
   const [loading, setLoading] = useState(!propData)
   const [error, setError] = useState(null)
+  const [expandedParties, setExpandedParties] = useState({})
   const detailsRef = useRef(null)
 
   useEffect(() => {
@@ -61,6 +62,15 @@ function DealerOverview({ data: propData }) {
       setShowAllBranches(false)
       setSelectedBranch(branch)
     }
+    // Reset expanded parties when changing branches
+    setExpandedParties({})
+  }
+
+  const toggleParties = (cardTitle) => {
+    setExpandedParties(prev => ({
+      ...prev,
+      [cardTitle]: !prev[cardTitle]
+    }))
   }
 
   const parseValue = (val) => parseFloat(String(val || 0).replace(/,/g, '')) || 0
@@ -102,67 +112,80 @@ function DealerOverview({ data: propData }) {
       title: 'Litigate',
       fields: [
         { label: 'Litigate Qty', field: 'Litigate Qty', type: 'qty' },
-        { label: 'Litigate Due', field: 'Litigate Due', type: 'amount' }
+        { label: 'Litigate Due', field: 'Litigate Due', type: 'amount' },
+        { label: 'Parties', field: 'Litigate List', type: 'text' }
       ]
     },
     {
       title: '0%-5%',
       fields: [
         { label: '0%-5% Dealer Qty', field: '0%-5% Dealer Qty', type: 'qty' },
-        { label: '0%-5% Due', field: '0%-5% Due', type: 'amount' }
+        { label: '0%-5% Due', field: '0%-5% Due', type: 'amount' },
+        { label: 'Parties', field: '0%-5% List', type: 'text' }
       ]
     },
     {
       title: '0%',
       fields: [
         { label: '0% Dealer Qty', field: '0% Dealer Qty', type: 'qty' },
-        { label: '0%-5% Due', field: '0%-5% Due', type: 'amount' }
+        { label: '0% Due', field: '0% Due', type: 'amount' }
       ]
     },
     {
       title: '5%-10%',
       fields: [
         { label: '5%-10% Dealer Qty', field: '5%-10% Dealer Qty', type: 'qty' },
-        { label: '5%-10% Due', field: '5%-10% Due', type: 'amount' }
+        { label: '5%-10% Due', field: '5%-10% Due', type: 'amount' },
+        { label: 'Parties', field: '5%-10% Dealer List', type: 'text' }
       ]
     },
     {
       title: '10%-15%',
       fields: [
         { label: '10%-15% Dealer Qty', field: '10%-15% Dealer Qty', type: 'qty' },
-        { label: '10%-15% Due', field: '10%-15% Due', type: 'amount' }
+        { label: '10%-15% Due', field: '10%-15% Due', type: 'amount' },
+        { label: 'Parties', field: '10%-15% Dealer List', type: 'text' }
       ]
     },
     {
       title: '15%-25%',
       fields: [
         { label: '15%-25% Dealer Qty', field: '15%-25% Dealer Qty', type: 'qty' },
-        { label: '15%-25% Due', field: '15%-25% Due', type: 'amount' }
+        { label: '15%-25% Due', field: '15%-25% Due', type: 'amount' },
+        { label: 'Parties', field: '15%-25% Dealer List', type: 'text' }
       ]
     },
     {
       title: '25%+',
       fields: [
         { label: '25%+ Dealer Qty', field: '25%+ Dealer Qty', type: 'qty' },
-        { label: '25%+ Due', field: '25%+ Due', type: 'amount' }
+        { label: '25%+ Due', field: '25%+ Due', type: 'amount' },
+        { label: 'Parties', field: '25%+ Dealer List', type: 'text' }
       ]
     },
     {
       title: '3 Month No Coll',
       fields: [
-        { label: 'Quantity', field: '3 Month No Coll', type: 'qty' }
+        { label: 'Quantity', field: '3 Month No Coll', type: 'qty' },
+        { label: 'Parties', field: '3 Month No Coll Dealer List', type: 'text' },
+        { label: 'Coll Running Month', field: 'Coll 3 Month No Coll', type: 'amount' },
+        { label: 'Balance', field: '3 Month No Coll Balance', type: 'amount' }
       ]
     },
     {
       title: '1 Year No Coll',
       fields: [
-        { label: 'Quantity', field: '1 Year No Coll', type: 'qty' }
+        { label: 'Quantity', field: '1 Year No Coll', type: 'qty' },
+        { label: 'Parties', field: '1 Year No Coll Dealer List', type: 'text' },
+        { label: 'Coll Running Month', field: 'Coll 1 Year No Coll', type: 'amount' },
+        { label: 'Balance', field: '1 Year No Coll Balance', type: 'amount' }
       ]
     },
     {
       title: 'No Coll Qty (Running)',
       fields: [
-        { label: 'Quantity', field: 'No Coll Qty', type: 'qty' }
+        { label: 'Quantity', field: 'No Coll Qty', type: 'qty' },
+        { label: 'Parties', field: 'No Coll Running List', type: 'text' }
       ]
     },
     {
@@ -179,7 +202,8 @@ function DealerOverview({ data: propData }) {
     {
       title: 'Policy Wise Collection Short',
       fields: [
-        { label: 'Policy Wise Collection Short', field: 'Policy Wise Collection Short', type: 'amount' }
+        { label: 'Policy Wise Collection Short', field: 'Policy Wise Collection Short', type: 'amount' },
+        { label: 'Parties', field: 'Policy Wise Collection Short List', type: 'text' }
       ]
     },
     {
@@ -206,8 +230,10 @@ function DealerOverview({ data: propData }) {
     }
   ]
 
-  const formatValue = (value, type) => {
+  const formatValue = (value, type, isExpanded = false) => {
     let displayValue = value
+    let className = ''
+    let itemCount = 0
     
     if (type === 'amount') {
       const numVal = Math.round(parseValue(value))
@@ -216,9 +242,24 @@ function DealerOverview({ data: propData }) {
       displayValue = formatNumber(Math.round(parseValue(value)))
     } else if (type === 'percentage') {
       displayValue = value
+    } else if (type === 'text') {
+      if (value && value.trim() !== '') {
+        // Split by ", " (comma and space) to properly separate dealer entries
+        const items = value.split(', ').filter(item => item.trim() !== '')
+        itemCount = items.length
+        
+        if (isExpanded) {
+          displayValue = items.map((item, index) => `${index + 1}. ${item}`).join('\n')
+        } else {
+          displayValue = `${itemCount} ${itemCount === 1 ? 'Party' : 'Parties'} (Click to view)`
+        }
+      } else {
+        displayValue = '-'
+      }
+      className = 'text-value'
     }
     
-    return { displayValue, className: '' }
+    return { displayValue, className, itemCount }
   }
 
   const handleCardAction = (cardTitle) => {
@@ -287,12 +328,35 @@ function DealerOverview({ data: propData }) {
               }
             }
             
-            const { displayValue, className } = formatValue(value, field.type)
+            const { displayValue, className } = formatValue(value, field.type, expandedParties[cardGroup.title])
             
             return (
-              <div key={field.label} className="card-row">
+              <div key={field.label} className={`card-row ${field.type === 'text' ? 'text-row' : ''}`}>
                 <span className="card-label">{field.label}:</span>
-                <span className={`card-value ${className}`}>{displayValue}</span>
+                {field.type === 'text' && value && value.trim() !== '' ? (
+                  <div 
+                    className={`card-value ${className} collapsible-parties`}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      toggleParties(cardGroup.title)
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.stopPropagation()
+                        toggleParties(cardGroup.title)
+                      }
+                    }}
+                  >
+                    <span className="parties-toggle-icon">
+                      {expandedParties[cardGroup.title] ? '▼' : '▶'}
+                    </span>
+                    <span>{displayValue}</span>
+                  </div>
+                ) : (
+                  <span className={`card-value ${className}`}>{displayValue}</span>
+                )}
               </div>
             )
           })}
@@ -315,6 +379,15 @@ function DealerOverview({ data: propData }) {
         if (field.field === 'Dealer Avg %' && areaRow && areaRow['Dealer Avg %']) {
           console.log('Using Area Dealer Avg %:', areaRow['Dealer Avg %'])
           aggregated[field.field] = areaRow['Dealer Avg %']
+        } else if (field.type === 'text') {
+          // For text fields, collect all non-empty values from all branches
+          const textValues = data
+            .filter(branch => branch['Branch Name'] && branch['Branch Name'].toLowerCase() !== 'area')
+            .map(branch => branch[field.field])
+            .filter(val => val && val.trim() !== '')
+          
+          // Join all text values with comma separator
+          aggregated[field.field] = textValues.length > 0 ? textValues.join(', ') : ''
         } else {
           const total = data.reduce((sum, branch) => {
             // Skip the Area row when calculating totals
