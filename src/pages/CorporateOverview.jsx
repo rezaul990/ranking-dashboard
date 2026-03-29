@@ -15,6 +15,7 @@ function CorporateOverview() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [columns, setColumns] = useState([])
+  const [expandedParties, setExpandedParties] = useState({})
   const detailsRef = useRef(null)
 
   useEffect(() => {
@@ -52,11 +53,36 @@ function CorporateOverview() {
       setShowAllBranches(false)
       setSelectedBranch(branch)
     }
+    // Reset expanded parties when changing branches
+    setExpandedParties({})
+  }
+
+  const toggleParties = (cardTitle) => {
+    setExpandedParties(prev => ({
+      ...prev,
+      [cardTitle]: !prev[cardTitle]
+    }))
   }
 
   const parseValue = (val) => parseFloat(String(val || 0).replace(/,/g, '')) || 0
 
-  const formatValue = (value) => {
+  const formatValue = (value, type = 'number', isExpanded = false) => {
+    if (type === 'text') {
+      if (value && value.trim() !== '') {
+        // Split by " , " (space, comma, space) to properly separate party entries for Corporate Overview
+        const items = value.split(' , ').filter(item => item.trim() !== '')
+        
+        if (isExpanded) {
+          return items.map((item, index) => `${index + 1}. ${item}`).join('\n')
+        } else {
+          return `${items.length} ${items.length === 1 ? 'Party' : 'Parties'} (Click to view)`
+        }
+      } else {
+        return '-'
+      }
+    }
+    
+    // Default number formatting
     const numVal = parseValue(value)
     if (numVal === 0 && value && isNaN(parseFloat(String(value).replace(/,/g, '')))) {
       return value // Return as-is if it's text
@@ -67,14 +93,26 @@ function CorporateOverview() {
   const calculateAllBranchesData = () => {
     const aggregated = {}
     columns.forEach(col => {
-      const total = data.reduce((sum, branch) => sum + parseValue(branch[col]), 0)
-      aggregated[col] = total
+      // Check if this is a text field (Party List columns)
+      if (col.includes('Party List') || col.includes('Dealer List') || col.includes('Qty List')) {
+        // For text fields, collect all non-empty values from all branches
+        const textValues = data
+          .filter(branch => branch['Branch Name'] && branch['Branch Name'].toLowerCase() !== 'area')
+          .map(branch => branch[col])
+          .filter(val => val && val.trim() !== '')
+        
+        // Join all text values with " , " separator (space, comma, space)
+        aggregated[col] = textValues.length > 0 ? textValues.join(' , ') : ''
+      } else {
+        const total = data.reduce((sum, branch) => sum + parseValue(branch[col]), 0)
+        aggregated[col] = total
+      }
     })
     return aggregated
   }
 
   // Columns to exclude from individual cards (they'll be grouped)
-  const groupedColumns = ['POS Due', 'EBS Due', 'POS Sale', 'EBS Sale', 'POS Coll', 'EBS Coll', 'Positive Balance', 'Negative Balance', 'No Coll Running Month']
+  const groupedColumns = ['POS Due', 'EBS Due', 'POS Sale', 'EBS Sale', 'POS Coll', 'EBS Coll', 'Positive Balance', 'Negative Balance', 'No Coll Running Month', 'Coll 3 Month No Coll Qty', 'Coll 1 Year No Coll Qty', '3 Month No Coll Qty List', '1 Year No Coll Qty List', 'No Coll Party List', '3 Month No Coll', '1 Year No Coll']
 
   // Card links mapping - add links here for cards that should be clickable
   const cardLinks = {
@@ -266,34 +304,197 @@ function CorporateOverview() {
     </div>
   )
 
-  const renderNoCollRunningCard = (branchData) => (
-    <div 
-      key="no-coll-running" 
-      className="collection-metric-card"
-      onClick={() => handleCardAction('No Coll Qty (Running)')}
-      role="button"
-      tabIndex={0}
-      onKeyPress={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          handleCardAction('No Coll Qty (Running)')
-        }
-      }}
-    >
-      <div className="card-header-row">
-        <div className="card-title">No Coll Qty (Running)</div>
-        <CardActionButton />
-      </div>
-      <div className="card-content">
-        <div className="card-row">
-          <span className="card-value">{formatValue(branchData['No Coll Running Month'])}</span>
+  const renderNoCollRunningCard = (branchData) => {
+    const partiesValue = branchData['No Coll Party List']
+    const isExpanded = expandedParties['No Coll Qty (Running)']
+    const formattedParties = formatValue(partiesValue, 'text', isExpanded)
+    
+    return (
+      <div 
+        key="no-coll-running" 
+        className="collection-metric-card"
+        onClick={() => handleCardAction('No Coll Qty (Running)')}
+        role="button"
+        tabIndex={0}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            handleCardAction('No Coll Qty (Running)')
+          }
+        }}
+      >
+        <div className="card-header-row">
+          <div className="card-title">No Coll Qty (Running)</div>
+          <CardActionButton />
+        </div>
+        <div className="card-content">
+          <div className="card-row">
+            <span className="card-label">Quantity:</span>
+            <span className="card-value">{formatValue(branchData['No Coll Running Month'])}</span>
+          </div>
+          {partiesValue && partiesValue.trim() !== '' && (
+            <div className="card-row text-row">
+              <span className="card-label">Parties:</span>
+              <div 
+                className="card-value text-value collapsible-parties"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggleParties('No Coll Qty (Running)')
+                }}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.stopPropagation()
+                    toggleParties('No Coll Qty (Running)')
+                  }
+                }}
+              >
+                <span className="parties-toggle-icon">
+                  {isExpanded ? '▼' : '▶'}
+                </span>
+                <span>{formattedParties}</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-    </div>
-  )
+    )
+  }
+
+  const render3MonthNoCollCard = (branchData) => {
+    const partiesValue = branchData['3 Month No Coll Qty List']
+    const isExpanded = expandedParties['3 Month No Coll']
+    const formattedParties = formatValue(partiesValue, 'text', isExpanded)
+    
+    return (
+      <div 
+        key="3-month-no-coll" 
+        className="collection-metric-card"
+        onClick={() => handleCardAction('3 Month No Coll')}
+        role="button"
+        tabIndex={0}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            handleCardAction('3 Month No Coll')
+          }
+        }}
+      >
+        <div className="card-header-row">
+          <div className="card-title">3 Month No Coll</div>
+          <CardActionButton />
+        </div>
+        <div className="card-content">
+          <div className="card-row">
+            <span className="card-label">Quantity:</span>
+            <span className="card-value">{formatValue(branchData['3 Month No Coll'])}</span>
+          </div>
+          <div className="card-row">
+            <span className="card-label">Collected Running:</span>
+            <span className="card-value">{formatValue(branchData['Coll 3 Month No Coll Qty'])}</span>
+          </div>
+          {partiesValue && partiesValue.trim() !== '' && (
+            <div className="card-row text-row">
+              <span className="card-label">Parties:</span>
+              <div 
+                className="card-value text-value collapsible-parties"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggleParties('3 Month No Coll')
+                }}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.stopPropagation()
+                    toggleParties('3 Month No Coll')
+                  }
+                }}
+              >
+                <span className="parties-toggle-icon">
+                  {isExpanded ? '▼' : '▶'}
+                </span>
+                <span>{formattedParties}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  const render1YearNoCollCard = (branchData) => {
+    const partiesValue = branchData['1 Year No Coll Qty List']
+    const isExpanded = expandedParties['1 Year No Coll']
+    const formattedParties = formatValue(partiesValue, 'text', isExpanded)
+    
+    return (
+      <div 
+        key="1-year-no-coll" 
+        className="collection-metric-card"
+        onClick={() => handleCardAction('1 Year No Coll')}
+        role="button"
+        tabIndex={0}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            handleCardAction('1 Year No Coll')
+          }
+        }}
+      >
+        <div className="card-header-row">
+          <div className="card-title">1 Year No Coll</div>
+          <CardActionButton />
+        </div>
+        <div className="card-content">
+          <div className="card-row">
+            <span className="card-label">Quantity:</span>
+            <span className="card-value">{formatValue(branchData['1 Year No Coll'])}</span>
+          </div>
+          <div className="card-row">
+            <span className="card-label">Collected Running:</span>
+            <span className="card-value">{formatValue(branchData['Coll 1 Year No Coll Qty'])}</span>
+          </div>
+          {partiesValue && partiesValue.trim() !== '' && (
+            <div className="card-row text-row">
+              <span className="card-label">Parties:</span>
+              <div 
+                className="card-value text-value collapsible-parties"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggleParties('1 Year No Coll')
+                }}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.stopPropagation()
+                    toggleParties('1 Year No Coll')
+                  }
+                }}
+              >
+                <span className="parties-toggle-icon">
+                  {isExpanded ? '▼' : '▶'}
+                </span>
+                <span>{formattedParties}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   const renderCards = (branchData) => {
     const cards = []
-    const filteredColumns = columns.filter(col => !groupedColumns.includes(col) && col !== 'Corpoate Due' && col !== 'Total Sale' && col !== 'Total Coll' && col !== 'Party Qty')
+    const filteredColumns = columns.filter(col => {
+      // Exclude grouped columns
+      if (groupedColumns.includes(col)) return false
+      // Exclude specific cards
+      if (col === 'Corpoate Due' || col === 'Total Sale' || col === 'Total Coll' || col === 'Party Qty') return false
+      // Exclude any column that contains these patterns (case-insensitive)
+      const colLower = col.toLowerCase()
+      if (colLower.includes('qty list') || colLower.includes('party list')) return false
+      return true
+    })
     
     // Add Party Qty grouped card first
     if (columns.includes('Party Qty')) {
@@ -313,6 +514,16 @@ function CorporateOverview() {
     // Add Total Coll grouped card
     if (columns.includes('Total Coll')) {
       cards.push(renderTotalCollCard(branchData))
+    }
+    
+    // Add 3 Month No Coll card
+    if (columns.includes('3 Month No Coll')) {
+      cards.push(render3MonthNoCollCard(branchData))
+    }
+    
+    // Add 1 Year No Coll card
+    if (columns.includes('1 Year No Coll')) {
+      cards.push(render1YearNoCollCard(branchData))
     }
     
     // Add No Coll Qty (Running) card
