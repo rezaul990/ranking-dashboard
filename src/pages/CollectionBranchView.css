@@ -135,6 +135,10 @@
   color: #ef4444;
 }
 
+.card-value.text-value-green {
+  color: #10b981;
+}
+
 .card-value.text-value.collapsible-parties {
   cursor: pointer;
   display: flex;
@@ -159,6 +163,10 @@
 
 [data-theme='dark'] .card-value.text-value {
   color: #f87171;
+}
+
+[data-theme='dark'] .card-value.text-value-green {
+  color: #34d399;
 }
 
 [data-theme='dark'] .card-value.text-value.collapsible-parties {

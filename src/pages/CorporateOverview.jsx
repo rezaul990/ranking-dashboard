@@ -73,7 +73,24 @@ function CorporateOverview() {
         const items = value.split(' , ').filter(item => item.trim() !== '')
         
         if (isExpanded) {
-          return items.map((item, index) => `${index + 1}. ${item}`).join('\n')
+          // Format each item with numbering and check for collection value
+          return items.map((item, index) => {
+            // Check if item contains "Collection=" to determine color
+            const hasCollection = item.includes('Collection=')
+            let collectionValue = 0
+            
+            if (hasCollection) {
+              // Extract collection value (format: "Collection= 123,456" or "Collection=0")
+              const collectionMatch = item.match(/Collection=\s*([0-9,]+)/)
+              if (collectionMatch) {
+                collectionValue = parseFloat(collectionMatch[1].replace(/,/g, '')) || 0
+              }
+            }
+            
+            // Add color indicator based on collection value
+            const colorClass = collectionValue > 0 ? '🟢' : '🔴'
+            return `${colorClass} ${index + 1}. ${item}`
+          }).join('\n')
         } else {
           return `${items.length} ${items.length === 1 ? 'Party' : 'Parties'} (Click to view)`
         }

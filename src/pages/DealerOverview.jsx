@@ -83,7 +83,8 @@ function DealerOverview({ data: propData }) {
       fields: [
         { label: 'Dealer Qty', field: 'Dealer Qty', type: 'qty' },
         { label: 'Positive Balance Qty', field: 'Positive Balance Qty', type: 'qty' },
-        { label: 'Negative Balance Qty', field: 'Negative Balance Qty', type: 'qty' }
+        { label: 'Negative Balance Qty', field: 'Negative Balance Qty', type: 'qty' },
+        { label: 'Parties', field: 'Dealer List with Due', type: 'text' }
       ]
     },
     {
@@ -121,6 +122,7 @@ function DealerOverview({ data: propData }) {
       fields: [
         { label: '0%-5% Dealer Qty', field: '0%-5% Dealer Qty', type: 'qty' },
         { label: '0%-5% Due', field: '0%-5% Due', type: 'amount' },
+        { label: 'Collection Running', field: 'Coll 0%-5% Qty', type: 'amount' },
         { label: 'Parties', field: '0%-5% List', type: 'text' }
       ]
     },
@@ -249,7 +251,24 @@ function DealerOverview({ data: propData }) {
         itemCount = items.length
         
         if (isExpanded) {
-          displayValue = items.map((item, index) => `${index + 1}. ${item}`).join('\n')
+          // Format each item with numbering and check for collection value
+          displayValue = items.map((item, index) => {
+            // Check if item contains "Collection=" to determine color
+            const hasCollection = item.includes('Collection=')
+            let collectionValue = 0
+            
+            if (hasCollection) {
+              // Extract collection value (format: "Collection= 123,456" or "Collection=0")
+              const collectionMatch = item.match(/Collection=\s*([0-9,]+)/)
+              if (collectionMatch) {
+                collectionValue = parseFloat(collectionMatch[1].replace(/,/g, '')) || 0
+              }
+            }
+            
+            // Add color indicator based on collection value
+            const colorClass = collectionValue > 0 ? '🟢' : '🔴'
+            return `${colorClass} ${index + 1}. ${item}`
+          }).join('\n')
         } else {
           displayValue = `${itemCount} ${itemCount === 1 ? 'Party' : 'Parties'} (Click to view)`
         }
