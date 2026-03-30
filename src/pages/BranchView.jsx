@@ -216,6 +216,73 @@ function BranchView() {
                   </div>
                 )
               })}
+              
+              {/* Loss Plaza Card */}
+              {(() => {
+                const lossPlazas = data.filter(branch => {
+                  const profitAch = Number(String(branch['Profit Ach'] || 0).replace(/,/g, ''))
+                  return profitAch < 0
+                })
+                
+                if (lossPlazas.length > 0) {
+                  return (
+                    <div className="metric-card loss-plaza-card">
+                      <div className="metric-label">🔴 Loss Plaza ({lossPlazas.length})</div>
+                      <div className="metric-values">
+                        <div className="loss-plaza-list">
+                          {lossPlazas.map((branch, idx) => {
+                            const lossAmount = Math.abs(Number(String(branch['Profit Ach'] || 0).replace(/,/g, '')))
+                            return (
+                              <div key={idx} className="loss-plaza-item">
+                                <span className="plaza-name">{branch['Branch Name']}</span>
+                                <span className="loss-amount">৳ {formatNumber(lossAmount)}</span>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+                return null
+              })()}
+              
+              {/* Degrowth Plaza Card */}
+              {(() => {
+                const degrowthPlazas = data.filter(branch => {
+                  const totalAch = Number(String(branch['Total Ach'] || 0).replace(/,/g, ''))
+                  const prevYear = Number(String(branch['Previous Year Total Sale'] || 0).replace(/,/g, ''))
+                  return prevYear > 0 && totalAch < prevYear
+                }).map(branch => {
+                  const totalAch = Number(String(branch['Total Ach'] || 0).replace(/,/g, ''))
+                  const prevYear = Number(String(branch['Previous Year Total Sale'] || 0).replace(/,/g, ''))
+                  const degrowthAmount = prevYear - totalAch
+                  const degrowthPercent = ((totalAch - prevYear) / prevYear * 100).toFixed(2)
+                  return { ...branch, degrowthAmount, degrowthPercent }
+                })
+                
+                if (degrowthPlazas.length > 0) {
+                  return (
+                    <div className="metric-card degrowth-plaza-card">
+                      <div className="metric-label">📉 Degrowth Plaza ({degrowthPlazas.length})</div>
+                      <div className="metric-values">
+                        <div className="loss-plaza-list">
+                          {degrowthPlazas.map((branch, idx) => (
+                            <div key={idx} className="loss-plaza-item">
+                              <div className="plaza-info">
+                                <span className="plaza-name">{branch['Branch Name']}</span>
+                                <span className="degrowth-percent">{branch.degrowthPercent}%</span>
+                              </div>
+                              <span className="loss-amount">৳ {formatNumber(branch.degrowthAmount)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+                return null
+              })()}
             </div>
           </div>
           <ScreenshotButton 

@@ -375,3 +375,102 @@
 [data-theme='dark'] .ranking-card .ranking-value {
   color: #1a1a2e !important;
 }
+
+/* Loss Plaza Card Styles */
+.loss-plaza-card {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%) !important;
+  border: 2px solid rgba(239, 68, 68, 0.5) !important;
+  grid-column: 1 / -1;
+}
+
+[data-theme='dark'] .loss-plaza-card {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.15) 0%, rgba(239, 68, 68, 0.15) 100%) !important;
+  border: 2px solid rgba(248, 113, 113, 0.5) !important;
+}
+
+.loss-plaza-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.loss-plaza-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: rgba(239, 68, 68, 0.08);
+  border-radius: 10px;
+  border-left: 4px solid #ef4444;
+  transition: all 0.3s ease;
+}
+
+.loss-plaza-item:hover {
+  background: rgba(239, 68, 68, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+[data-theme='dark'] .loss-plaza-item {
+  background: rgba(248, 113, 113, 0.12);
+  border-left-color: #f87171;
+}
+
+[data-theme='dark'] .loss-plaza-item:hover {
+  background: rgba(248, 113, 113, 0.2);
+}
+
+.plaza-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.loss-amount {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ef4444;
+  white-space: nowrap;
+}
+
+[data-theme='dark'] .loss-amount {
+  color: #f87171;
+}
+
+/* Degrowth Plaza Card Styles */
+.degrowth-plaza-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%) !important;
+  border: 2px solid rgba(245, 158, 11, 0.5) !important;
+  grid-column: 1 / -1;
+}
+
+[data-theme='dark'] .degrowth-plaza-card {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%) !important;
+  border: 2px solid rgba(251, 191, 36, 0.5) !important;
+}
+
+.plaza-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.degrowth-percent {
+  font-size: 12px;
+  font-weight: 700;
+  color: #dc2626;
+  background: rgba(254, 226, 226, 0.9);
+  padding: 4px 12px;
+  border-radius: 6px;
+  width: fit-content;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+[data-theme='dark'] .degrowth-percent {
+  color: #fca5a5;
+  background: rgba(127, 29, 29, 0.6);
+  border: 1px solid rgba(252, 165, 165, 0.3);
+}
