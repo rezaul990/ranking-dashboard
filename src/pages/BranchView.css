@@ -1,6 +1,6 @@
 .branch-view {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
   gap: 24px;
   animation: fadeIn 0.6s ease-out;
 }
@@ -16,7 +16,7 @@
 }
 
 .page-title {
-  font-size: 32px;
+  font-size: clamp(20px, 2.5vw, 32px);
   font-weight: 800;
   margin: 0;
   color: white;
@@ -34,14 +34,17 @@
 .branch-selector-card {
   background: var(--card-bg);
   backdrop-filter: blur(20px);
-  border-radius: 20px;
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
   padding: 24px;
-  box-shadow: 0 8px 32px var(--shadow);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
   height: fit-content;
   max-height: 80vh;
   overflow-y: auto;
-  transition: all 0.3s ease;
+  transition: all var(--transition);
+  position: sticky;
+  top: 20px;
 }
 
 .branch-selector-card h2 {
@@ -113,12 +116,14 @@
 
 .branch-details {
   background: var(--card-bg);
-  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-lg);
   padding: 28px;
-  box-shadow: 0 8px 32px var(--shadow);
+  box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
-  animation: slideUp 0.5s ease-out;
-  transition: all 0.3s ease;
+  animation: slideUp 0.5s var(--ease);
+  transition: all var(--transition);
 }
 
 .branch-header {
@@ -145,21 +150,39 @@
 
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   gap: 20px;
 }
 
 .metric-card {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  transition: all 0.3s ease;
+  background: var(--surface-solid);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  border: 1px solid var(--border-strong);
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--brand-gradient);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.metric-card:hover::before {
+  opacity: 1;
 }
 
 [data-theme='dark'] .metric-card {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  background: var(--surface-solid);
+  border: 1px solid var(--border-strong);
 }
 
 .branch-item.all-branches {
@@ -184,8 +207,8 @@
 
 .metric-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
-  border-color: rgba(102, 126, 234, 0.3);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--brand-start);
 }
 
 .metric-card.card-highlight-red {
@@ -284,6 +307,7 @@
 
   .branch-selector-card {
     max-height: 300px;
+    position: static;
   }
 }
 
@@ -390,7 +414,7 @@
 
 .loss-plaza-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 12px;
   width: 100%;
 }

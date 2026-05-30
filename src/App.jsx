@@ -36,11 +36,17 @@ function App() {
       <ThemeToggle />
       
       <header>
-        <div>
-          <h1>Walton Plaza – Branch Dashboard</h1>
-          <div className="subtitle">Performance Analytics & Insights</div>
+        <div className="header-brand">
+          <div className="header-logo">📊</div>
+          <div>
+            <h1>Walton Plaza – Branch Dashboard</h1>
+            <div className="subtitle">Performance Analytics & Insights</div>
+          </div>
         </div>
-        <div className="subtitle">Real-time Data</div>
+        <div className="header-status">
+          <span className="status-dot"></span>
+          <span>Real-time Data</span>
+        </div>
       </header>
 
       <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
